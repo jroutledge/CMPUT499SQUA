@@ -7,7 +7,7 @@ from PIL import ImageFont
 DISPLAY_X = 800
 DISPLAY_Y = 600
 BUBBLE_RADIUS =  int((DISPLAY_X * DISPLAY_Y) / 13000)
-print(BUBBLE_RADIUS)
+SHOOT_POSITION = (int(DISPLAY_X / 2), int(DISPLAY_Y * 0.8))
 # Gloabal variables to represent various colours
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -18,8 +18,12 @@ WHITE = (255, 255, 255)
 LIGHT_BLUE = (0, 100, 255)
 TEXT_COLOUR = (0, 0, 0)
 BACKGROUND_COLOUR = (255, 255, 255)
-# Globals for the thesaurus
-WORDS = {'good':['nice','excellent','incredible'], 'bad':['evil','despicable','mean']}
+# Globals for the thesaurus TODO: make this a thesaurus library
+WORDS = {
+        'good':['nice','excellent','exceptional', 'wonderful', 'positive'], \
+        'bad':['awful', 'evil','despicable','mean'], \
+        'well':['strong', 'together']
+        }
 WORD_COLOURS = [RED, GREEN, BLUE] #there should be 10, this will be the list of colours for the different words for the current session
 
 # this is a helper to quit the game #
@@ -33,9 +37,9 @@ def get_pos():
     pos = pygame.mouse.get_pos()
     return (pos)
 
-# this draws a circle as the position x, y #
-def drawBubble(pos, colour):
-    pygame.draw.circle(gameDisplay, colour, pos, BUBBLE_RADIUS, 0)
+# # this draws a circle as the position x, y #
+# def drawBubble(pos, colour):
+#     pygame.draw.circle(gameDisplay, colour, pos, BUBBLE_RADIUS, 0)
 
 # helper to find out how big a word will be, in pixels, given its font and size #
 def getFontPixels(font, size, word):
@@ -88,6 +92,11 @@ def createBubbles():
         except Exception as e:
             print('Unable to initialize bubbles: ' + str(e.message)) # oh ya we error handling now
 
+# this will shoot a bubble from its current locaiton to the position specified
+def shoot(bubble, destPos):
+    bubble.move(destPos)
+    # load in new bubble
+
 # this is a helper function that will draw the game board in the middle of the screen #
 def drawBoard():
     global width, left, top
@@ -101,8 +110,8 @@ def drawBoard():
     # starting position for the shooter #
     x = int(DISPLAY_X / 2)
     y = int(DISPLAY_Y * 4 / 5)
-    pygame.draw.circle(gameDisplay, BLACK,  \
-        (int(DISPLAY_X / 2), int(DISPLAY_Y * 0.8)), 24, 2)
+    # pygame.draw.circle(gameDisplay, BLACK,  \
+    #    SHOOT_POSITION, 24, 2)
 
 # funtion to add stuff around the main board space #
 # it will ultimately be used for things like score #
@@ -130,26 +139,56 @@ def game_loop():
     clock = pygame.time.Clock()
     running = True
     
-    drawBoard()
-    createBubbles()
-    addToBoard() # this function is a shell right now
+    # create a queue of bubble to be shot
+    bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], 'good', LIGHT_BLUE)
+    bubble.draw()
 
     while running:
+        drawBoard()
+        createBubbles()
+        addToBoard() # this function is a shell right now
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = get_pos()
-                drawWordBubble(pos, 'good', LIGHT_BLUE)
+                shoot(bubble, pos)
             if event.type == pygame.QUIT:
                 running = False
 
             #print(event)
-
-
         pygame.display.update()
         clock.tick(60)
 
     quit_game()
 
+# this draws a circle as the position x, y #
+def drawBubble(pos, colour):
+    pygame.draw.circle(gameDisplay, colour, pos, BUBBLE_RADIUS, 0)
+
+# TODO: put this in an appropriate other file
+class Bubble:
+    def __init__(self, pos_x, pos_y, word, colour):
+        self.pos = (pos_x, pos_y)   # tuple that represents the bubbles position
+        self.word = word            # word that will be in the buble
+        self.colour = colour        # the colour that the bubble will be
+        return
+
+    #TODO: this function should move a bubble around the screen
+    def move(self, targetPosition):
+        self.erase()
+        self.pos = targetPosition
+        self.draw()
+        return
+
+    def draw(self):
+        drawBubble(self.pos, self.colour)
+        writeToBubble(self.word, self.pos)
+        return
+
+    def erase(self):
+        drawBubble(self.pos, WHITE)
+        return
+
 if __name__ == '__main__':
+    print(BUBBLE_RADIUS)
     game_loop()
 
