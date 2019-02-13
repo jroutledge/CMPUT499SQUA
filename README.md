@@ -2,9 +2,11 @@
 
 ## Build and Run Instructions 
 
-* Project supported on Linux and MacOS
-1. Ensure Python2.7 is installed 
+* Note, project supported on Linux and MacOS with Python 2.7
+1. Ensure Python2.7 and pip are installed 
     > sudo apt-get install python2.7
+    
+    > sudo apt-get install python-pip
 2. Install pygame and Pillow packages 
     > pip install pygame
     
