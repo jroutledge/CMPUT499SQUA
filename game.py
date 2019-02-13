@@ -102,9 +102,12 @@ class Board:
         # remove from future bubbles
         self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
         # add shot bubble to board
-        kdtree = KDTree(self.board_positions) #THIS LINE
-        kdtree_q = kdtree.query(data, 1)
-        print(dest_pos[kdtree_q[1]][:,1:])
+        print(self.board_positions)
+        board_cpy = [x for x in self.board_positions if x is not 0]
+        print(board_cpy)
+        kdtree = KDTree(board_cpy)
+        kdtree_q = kdtree.query(board_cpy, 1)
+        print(dest_pos[kdtree_q])  #THIS LINE
         #self.board_bubbles.append
         # load in new bubble
         new_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
