@@ -127,8 +127,6 @@ class Board:
         hit_array = []
         bubble = self.shoot_bubble
 
-        print("OG BUBBLE:", bubble)
-
         self.shoot_bubble.erase()
 
         # remove from future bubbles
@@ -140,23 +138,35 @@ class Board:
         kdtree = KDTree(board_cpy)
         dist, indices = kdtree.query(dest_pos)
 
-        print("dest_pos, dist, indicies = ", dest_pos, dist, indices)
-
         # add shot bubble to board
         self.board_bubbles.insert(indices, bubble)
         self.shoot_bubble.pos = self.board_positions[indices]
         self.drawAllBubbles()
 
-        print("did the things")
+        # detect matches and pop as needed
+        matches = self.findMatches()
+        if matches != []:
+            # erase the matches
+            # send good job message
+            continue
 
         # load in new bubble
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             self.future_bubbles[0][0], self.future_bubbles[0][1])
         self.shoot_bubble.draw()
-        print("new bubbles ", self.shoot_bubble)
         # TODO: THIS ISN'T WORKING
 
         return hit_array
+
+
+    def findMatches(self):
+        """ finds matches that the bubble has made """
+        matches = []
+        bubble = self.shoot_bubble
+
+
+
+        return matches
 
 
     def drawBoard(self):
