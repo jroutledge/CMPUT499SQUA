@@ -148,7 +148,7 @@ class Board:
         if matches != []:
             # erase the matches
             # send good job message
-            continue
+            True
 
         # load in new bubble
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
