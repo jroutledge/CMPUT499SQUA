@@ -82,6 +82,7 @@ def game_loop():
                 pos = getPos()
                 # if (checkInbound(pos, board) == True):
                 if board.board.collidepoint(pos):
+                    print("shooting bubble to ", pos)
                     board.shootBubble(pos)
                 else:
                     #TODO: display an error
@@ -113,18 +114,22 @@ class Board:
         self.height = int(DISPLAY_Y * 0.8)
         self.future_bubbles = []
         self.board_len = calcBoard(self)
-        self.board_bubbles = [0] * self.board_len
-        self.board_positions = [0] * self.board_len
+        self.board_bubbles = [0] * self.board_len       # list of bubbles on the board
+        self.board_positions = [0] * self.board_len     # list if coords for centers of bubble
         self.createWordList()
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
-                            self.future_bubbles[0][0], self.future_bubbles[0][1])
-        self.board = None
+                            self.future_bubbles[0][0], self.future_bubbles[0][1])   # bubble to shoot
+        self.board = None       # rect object of the board
 
 
     def shootBubble(self, dest_pos):
         """ this will shoot a bubble from its current location to the position specified """
         hit_array = []
         bubble = self.shoot_bubble
+
+        print("OG BUBBLE:", bubble)
+
+        self.shoot_bubble.erase()
 
         # remove from future bubbles
         self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
@@ -135,13 +140,20 @@ class Board:
         kdtree = KDTree(board_cpy)
         dist, indices = kdtree.query(dest_pos)
 
+        print("dest_pos, dist, indicies = ", dest_pos, dist, indices)
+
         # add shot bubble to board
         self.board_bubbles.insert(indices, bubble)
+        self.shoot_bubble.pos = self.board_positions[indices]
+        self.drawAllBubbles()
+
+        print("did the things")
 
         # load in new bubble
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             self.future_bubbles[0][0], self.future_bubbles[0][1])
         self.shoot_bubble.draw()
+        print("new bubbles ", self.shoot_bubble)
         # TODO: THIS ISN'T WORKING
 
         return hit_array
