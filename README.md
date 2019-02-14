@@ -7,10 +7,12 @@
     > sudo apt-get install python2.7
     
     > sudo apt-get install python-pip
-2. Install pygame and Pillow packages 
-    > pip install pygame
+2. Install PyGame, Pillow, and SciPy packages 
+    > pip install PyGame
     
     > pip install Pillow 
+    
+    > pip install SciPy
 3. Clone repository on local machine 
     > git clone https://github.com/jroutledge/CMPUT499SQUA.git
 4. Navigate to folder 
