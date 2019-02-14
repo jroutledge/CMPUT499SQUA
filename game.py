@@ -76,7 +76,8 @@ def game_loop():
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
-                if (checkInbound(pos, board) == True):
+                # if (checkInbound(pos, board) == True):
+                if board.board.collidepoint(pos):
                     board.shootBubble(pos)
                 else:
                     #TODO: display an error
@@ -112,8 +113,9 @@ class Board:
         self.createWordList()
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             self.future_bubbles[0][0], self.future_bubbles[0][1])
+        self.board = None
 
-    # this will shoot a bubble from its current locaiton to the position specified
+    # this will shoot a bubble from its current location to the position specified
     def shootBubble(self, dest_pos):
         hit_array = []
         bubble = self.shoot_bubble
@@ -134,8 +136,8 @@ class Board:
         return hit_array
 
     def drawBoard(self):
-        pygame.draw.rect(gameDisplay, BLACK, \
-            (self.left, self.top, self.width, self.height), 2)
+        self.board = pygame.draw.rect(gameDisplay, BLACK, \
+                                      (self.left, self.top, self.width, self.height), 2)
 
     def drawAllBubbles(self):
         self.shoot_bubble.draw()
