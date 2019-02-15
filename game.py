@@ -106,10 +106,21 @@ def game_loop():
                 POPUP_COUNTER = 0
                 erase_popup(POPUP[0], POPUP[1], POPUP[2])
                 board.success_popped = False
+
+            if board.future_bubbles == []:
+                board.game_over = True
+                print("You lost!")
+
+            if board.board_bubbles == []:
+                # print a win message to the screen
+                board.won = True
+                print("You won!")
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
                 # if (checkInbound(pos, board) == True):
                 if board.board.collidepoint(pos):
+                    print(board.future_bubbles)
                     board.shootBubble(pos)
                 else:
                     #TODO: display an error
@@ -117,11 +128,6 @@ def game_loop():
 
             if event.type == pygame.QUIT:
                 running = False
-
-            if board.board_bubbles == []:
-                # print a win message to the screen
-                board.won = True
-                print("You won!")
 
         pygame.display.update()
         clock.tick(60)
@@ -155,6 +161,7 @@ class Board:
         self.board = None       # rect object of the board
         self.success_popped = False
         self.won = False
+        self.game_over = False
 
 
     def shootBubble(self, dest_pos):
@@ -176,7 +183,6 @@ class Board:
         # add shot bubble to board
         self.board_bubbles.insert(indices, bubble)
         self.shoot_bubble.pos = self.board_positions[indices]
-        self.drawAllBubbles()
 
         # detect matches and pop as needed
         self.findMatches()
@@ -184,7 +190,7 @@ class Board:
         # load in new bubble
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             self.future_bubbles[0][0], self.future_bubbles[0][1])
-        self.shoot_bubble.draw(BLACK)
+        # self.shoot_bubble.draw(BLACK)
         # TODO: THIS ISN'T WORKING
 
         return hit_array
@@ -311,6 +317,13 @@ class Board:
             POPUP_COUNTER += 1
             # store the popup for deletion later
             POPUP = ['Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
+        elif self.game_over:
+            # create the game over popup
+            createPopup('Game over man, game over!', RED, int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4))
+            # start the counter
+            POPUP_COUNTER += 1
+            # store the popup for deletion later
+            POPUP = ['Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
 
 ### END BOARD CLASS AND HELPERS ###
 
@@ -375,7 +388,7 @@ class Bubble:
         writeToBubble(self.word, self.pos, WHITE)
         return
 
-        
+
 if __name__ == '__main__':
     print(BUBBLE_RADIUS)
     game_loop()
