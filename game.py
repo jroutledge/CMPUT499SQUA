@@ -12,23 +12,29 @@ DISPLAY_X = 800
 DISPLAY_Y = 600
 BUBBLE_RADIUS =  int((DISPLAY_X * DISPLAY_Y) / 13000)
 SHOOT_POSITION = (int(DISPLAY_X / 2), int(DISPLAY_Y * 0.8))
+# Global variables for controlling the duration of popups
+POPUP_COUNTER = 0
+POPUP = None
+POPUP_FONT = None # TODO: find a way to make this global
 # Gloabal variables to represent various colours
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255,255,0)
 WHITE = (255, 255, 255)
-
 LIGHT_BLUE = (0, 100, 255)
 TEXT_COLOUR = (0, 0, 0)
 BACKGROUND_COLOUR = (255, 255, 255)
-# Globals for the thesaurus TODO: make this a thesaurus library
+# Globals for the thesaurus TODO: make this a thesaurus library and dynamically generate
 WORDS = {
         'good':['nice','excellent','exceptional', 'wonderful', 'positive'], \
-        'bad':['awful', 'evil','despicable','mean'], \
-        'well':['strong', 'together']
+        'bad':['awful', 'evil','despicable', 'mean'], \
+        'easy':['accessible', 'clear', 'effortless', 'obvious'], \
+        'hard':['arduous', 'heavy', 'rough', 'tough']
+
         }
-WORD_COLOURS = [RED, GREEN, BLUE] #there should be 10, this will be the list of colours for the different words for the current session
+WORD_COLOURS = [RED, GREEN, BLUE, YELLOW] #TODO: add colours as needed
 
 
 def quitGame():
@@ -58,9 +64,20 @@ def checkInbound(pos, board):
         return False
     return True
 
+def createPopup(words, colour, pos_x, pos_y):
+    POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
+    message = POPUP_FONT.render(words, False, colour)
+    gameDisplay.blit(message, (pos_x, pos_y))
+
+
+def erase_popup(message, pos_x, pos_y):
+    POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
+    message = POPUP_FONT.render(message, False, WHITE)
+    gameDisplay.blit(message, (pos_x, pos_y))
+
 
 def game_loop():
-    global running, gameDisplay
+    global running, gameDisplay, POPUP, POPUP_COUNTER
 
     pygame.init()
     pygame.font.init() # for writing text to pygame
@@ -77,8 +94,15 @@ def game_loop():
     while running:
         board.drawBoard()
         board.drawAllBubbles()
-        board.addToBoard() # this function is a shell right now
+        board.addToBoard()
         for event in pygame.event.get():
+            # this section handles the erasing of a popup after 5000 ticks
+            if POPUP_COUNTER >= 1:
+                POPUP_COUNTER += 1
+            if POPUP_COUNTER >= 50:
+                POPUP_COUNTER = 0
+                erase_popup(POPUP[0], POPUP[1], POPUP[2])
+                board.success_popped = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
                 # if (checkInbound(pos, board) == True):
@@ -93,10 +117,8 @@ def game_loop():
 
             if board.board_bubbles == []:
                 # print a win message to the screen
+                board.won = True
                 print("You won!")
-                font = pygame.font.SysFont('Comic Sans MS', 30)
-                message = font.render('You Won! Good Job!', False, BLUE)
-                gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
 
         pygame.display.update()
         clock.tick(60)
@@ -128,6 +150,8 @@ class Board:
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             self.future_bubbles[0][0], self.future_bubbles[0][1])   # bubble to shoot
         self.board = None       # rect object of the board
+        self.success_popped = False
+        self.won = False
 
 
     def shootBubble(self, dest_pos):
@@ -174,17 +198,20 @@ class Board:
         # find matching bubbles that are touching our bubbles
         for b in matches:
             for onBoard in self.board_bubbles:
+                if (self.board_bubbles == 0):
+                    pass
                 if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour:
                     # it's matching and touching
                     if onBoard not in matches:
                         matches.append(onBoard)
 
-        print(matches)
+        #print(matches)
         if matches != [bubble]:
             # erase the matches
             for b in matches:
                 b.erase()
                 index = self.board_bubbles.index(b)
+                self.board_bubbles.pop(index)
                 # TODO: MAKE THE BUBBLE REMOVE FROM THE LIST
                 # @JEFF PAY ATTENTION TO THIS
                 b.colour = WHITE
@@ -192,13 +219,7 @@ class Board:
 
             # send good job message
             print("You popped bubbles!")
-            font = pygame.font.SysFont('Comic Sans MS', 30)
-            message = font.render('Words Matched! Good Job!', False, BLUE)
-            gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
-            time.sleep(3)
-            message = font.render('Words Matched! Good Job!', False, WHITE)
-            gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
-
+            self.success_popped = True
         return
 
 
@@ -210,7 +231,9 @@ class Board:
     def drawAllBubbles(self):
         self.shoot_bubble.draw(BLACK)
         for bubble in self.board_bubbles:
-            bubble.draw(BLACK)
+            if (bubble != 0):
+                bubble.draw(BLACK)
+
 
     def createWordList(self):
         """ this will populate the game board with words """
@@ -257,6 +280,7 @@ class Board:
 
 
     def addToBoard(self):
+        global POPUP_COUNTER, POPUP
         """
         funtion to add stuff around the main board space
         it will ultimately be used for things like score
@@ -272,6 +296,20 @@ class Board:
         gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.1)))
         gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.2)))
         gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.3)))
+        if self.won:
+            # create the success popup
+            createPopup('You Won! Good Job!', BLUE, int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5))
+            # store the popup for deletion later
+            POPUP = ['Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
+            # create second success popu TODO: this is a meme, remove it
+            createPopup('Winner, winner, chicken dinner', BLUE, int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4))
+        elif self.success_popped:
+            # create the success popup
+            createPopup('Words Matched! Good Job!', BLUE, int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5))
+            # start the counter
+            POPUP_COUNTER += 1
+            # store the popup for deletion later
+            POPUP = ['Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
 
 ### END BOARD CLASS AND HELPERS ###
 
