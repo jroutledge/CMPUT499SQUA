@@ -168,18 +168,26 @@ class Board:
         finds matches that the bubble has made
         'pops' the matches and then displays a good job message
         """
-        matches = []
         bubble = self.shoot_bubble
-        b_list = self.board_bubbles
+        matches = [bubble]
 
-        # find the bubbles in b_list that are near bubble
-        # append them to matches
+        # find matching bubbles that are touching our bubbles
+        for b in matches:
+            for onBoard in self.board_bubbles:
+                if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour:
+                    # it's matching and touching
+                    if onBoard not in matches:
+                        matches.append(onBoard)
 
-        if matches != []:
+        print(matches)
+        if matches != [bubble]:
             # erase the matches
             for b in matches:
                 b.erase()
-                # TODO: get the index of the bubble and then remove it from self.board_bubbles
+                index = self.board_bubbles.index(b)
+                # TODO: MAKE THE BUBBLE REMOVE FROM THE LIST
+                # @JEFF PAY ATTENTION TO THIS
+                b.colour = WHITE
             bubble.erase()
 
             # send good job message
@@ -187,7 +195,7 @@ class Board:
             font = pygame.font.SysFont('Comic Sans MS', 30)
             message = font.render('Words Matched! Good Job!', False, BLUE)
             gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
-            time.sleep(2)
+            time.sleep(3)
             message = font.render('Words Matched! Good Job!', False, WHITE)
             gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
 
@@ -268,6 +276,18 @@ class Board:
 ### END BOARD CLASS AND HELPERS ###
 
 ### START BUBBLE CLASS AND HELPERS ###
+def collide(pos1, pos2):
+    """ checks if 2 points are within 2.5*radius of eachother """
+    x = pos1[0] - pos2[0]
+    y = pos1[1] - pos2[1]
+    dist = math.hypot(x, y)
+    if dist <= 2.5*BUBBLE_RADIUS:
+        # collision
+        return True
+    else:
+        # no collision
+        return False
+
 def getFontPixels(font, size, word):
     """ helper to find out how big a word will be, in pixels, given its font and size """
     font = ImageFont.truetype(font, size)
@@ -289,7 +309,7 @@ def writeToBubble(word, pos, color):
 
 def drawBubble(pos, colour):
     """ this draws a circle as the position x, y """
-    pygame.draw.circle(gameDisplay, colour, pos, BUBBLE_RADIUS, 0)
+    return pygame.draw.circle(gameDisplay, colour, pos, BUBBLE_RADIUS, 0)
 
 # TODO: put this in an appropriate other file
 class Bubble:
@@ -300,9 +320,9 @@ class Bubble:
         return
 
     # TODO: this function should move a bubble around the screen
-    def move(self, targetPosition):
+    def move(self, target_position):
         self.erase()
-        self.pos = targetPosition
+        self.pos = target_position
         self.draw(BLACK)
         return
 
@@ -316,8 +336,10 @@ class Bubble:
         writeToBubble(self.word, self.pos, WHITE)
         return
 
+
 # TODO: put this in an appropriate other file
 #class Board:
+
 
 if __name__ == '__main__':
     print(BUBBLE_RADIUS)
