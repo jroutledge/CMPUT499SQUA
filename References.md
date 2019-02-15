@@ -23,3 +23,7 @@
 
 1. link 1
 2. link 2
+
+### Misc. ###
+
+1. https://lite.mst.edu/media/research/ctel/documents/LITE-2003-04.pdf

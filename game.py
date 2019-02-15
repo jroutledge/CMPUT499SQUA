@@ -21,7 +21,9 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-YELLOW = (255,255,0)
+YELLOW = (255, 255 ,0)
+PURPLE = (255, 0, 255)
+TURQUOISE = (0, 255, 255)
 WHITE = (255, 255, 255)
 LIGHT_BLUE = (0, 100, 255)
 TEXT_COLOUR = (0, 0, 0)
@@ -31,10 +33,11 @@ WORDS = {
         'good':['nice','excellent','exceptional', 'wonderful', 'positive'], \
         'bad':['awful', 'evil','despicable', 'mean'], \
         'easy':['accessible', 'clear', 'effortless', 'obvious'], \
-        'hard':['arduous', 'heavy', 'rough', 'tough']
-
+        'hard':['arduous', 'heavy', 'rough', 'tough'], \
+        'cold':['chilled', 'cool', 'icy', 'snowy'], \
+        'warm':['hot', 'balmy', 'heated', 'sunny']
         }
-WORD_COLOURS = [RED, GREEN, BLUE, YELLOW] #TODO: add colours as needed
+WORD_COLOURS = [RED, GREEN, BLUE, YELLOW, PURPLE, TURQUOISE] #TODO: add colours as needed
 
 
 def quitGame():
@@ -212,8 +215,6 @@ class Board:
                 b.erase()
                 index = self.board_bubbles.index(b)
                 self.board_bubbles.pop(index)
-                # TODO: MAKE THE BUBBLE REMOVE FROM THE LIST
-                # @JEFF PAY ATTENTION TO THIS
                 b.colour = WHITE
             bubble.erase()
 
@@ -374,11 +375,7 @@ class Bubble:
         writeToBubble(self.word, self.pos, WHITE)
         return
 
-
-# TODO: put this in an appropriate other file
-#class Board:
-
-
+        
 if __name__ == '__main__':
     print(BUBBLE_RADIUS)
     game_loop()
