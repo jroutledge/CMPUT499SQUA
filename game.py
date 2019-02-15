@@ -170,11 +170,17 @@ class Board:
         """
         matches = []
         bubble = self.shoot_bubble
+        b_list = self.board_bubbles
 
-
+        # find the bubbles in b_list that are near bubble
+        # append them to matches
 
         if matches != []:
             # erase the matches
+            for b in matches:
+                b.erase()
+                # TODO: get the index of the bubble and then remove it from self.board_bubbles
+            bubble.erase()
 
             # send good job message
             print("You popped bubbles!")
