@@ -4,6 +4,7 @@ from PIL import ImageFont
 from scipy.spatial import KDTree
 import random
 import math
+import time
 
 # Global values for the display size
 # (we will always multiply these so that we can scale the resolution)
@@ -82,13 +83,20 @@ def game_loop():
                 pos = getPos()
                 # if (checkInbound(pos, board) == True):
                 if board.board.collidepoint(pos):
-                    print("shooting bubble to ", pos)
                     board.shootBubble(pos)
                 else:
                     #TODO: display an error
                     pass
+
             if event.type == pygame.QUIT:
                 running = False
+
+            if board.board_bubbles == []:
+                # print a win message to the screen
+                print("You won!")
+                font = pygame.font.SysFont('Comic Sans MS', 30)
+                message = font.render('You Won! Good Job!', False, BLUE)
+                gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
 
         pygame.display.update()
         clock.tick(60)
@@ -144,29 +152,40 @@ class Board:
         self.drawAllBubbles()
 
         # detect matches and pop as needed
-        matches = self.findMatches()
-        if matches != []:
-            # erase the matches
-            # send good job message
-            True
+        self.findMatches()
 
         # load in new bubble
         self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             self.future_bubbles[0][0], self.future_bubbles[0][1])
-        self.shoot_bubble.draw()
+        self.shoot_bubble.draw(BLACK)
         # TODO: THIS ISN'T WORKING
 
         return hit_array
 
 
     def findMatches(self):
-        """ finds matches that the bubble has made """
+        """
+        finds matches that the bubble has made
+        'pops' the matches and then displays a good job message
+        """
         matches = []
         bubble = self.shoot_bubble
 
 
 
-        return matches
+        if matches != []:
+            # erase the matches
+
+            # send good job message
+            print("You popped bubbles!")
+            font = pygame.font.SysFont('Comic Sans MS', 30)
+            message = font.render('Words Matched! Good Job!', False, BLUE)
+            gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
+            time.sleep(2)
+            message = font.render('Words Matched! Good Job!', False, WHITE)
+            gameDisplay.blit(message, (int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)))
+
+        return
 
 
     def drawBoard(self):
@@ -175,9 +194,9 @@ class Board:
 
 
     def drawAllBubbles(self):
-        self.shoot_bubble.draw()
+        self.shoot_bubble.draw(BLACK)
         for bubble in self.board_bubbles:
-            bubble.draw()
+            bubble.draw(BLACK)
 
     def createWordList(self):
         """ this will populate the game board with words """
@@ -217,7 +236,7 @@ class Board:
                 bubbleTop += (BUBBLE_RADIUS * 2) # go to the next row
                 if ((row_num % 2) != 0):
                     bubbleLeft += BUBBLE_RADIUS # offset every other row
-                    bubbleTop -= int(BUBBLE_RADIUS/3) # reduce the height so they go between the bubbles
+                    bubbleTop -= int(BUBBLE_RADIUS/3.5) # reduce the height so they go between the bubbles
                     #TODO: math the above line, is it a third?? a quarter?? somewhere in between??
             self.board_positions[i] = [bubbleLeft, bubbleTop]
         return bubbleList
@@ -231,11 +250,11 @@ class Board:
         """
         meme_font = pygame.font.SysFont('Comic Sans MS', 30)
         # write some memes on the sides #
-        left_meme = meme_font.render('It ya boi', False, BLACK)
-        right_meme = meme_font.render('DJ the ', False, BLACK)
-        right_meme_pt2 = meme_font.render('incredible', False, BLACK)
-        right_meme_pt3 = meme_font.render('pancake', False, BLACK) 
-        gameDisplay.blit(left_meme, (int(DISPLAY_X * 0.05), int(DISPLAY_Y * 0.1)))
+        # left_meme = meme_font.render('It ya boi', False, BLACK)
+        right_meme = meme_font.render('To play click', False, BLACK)
+        right_meme_pt2 = meme_font.render('where you want', False, BLACK)
+        right_meme_pt3 = meme_font.render('the bubble to go', False, BLACK)
+        # gameDisplay.blit(left_meme, (int(DISPLAY_X * 0.05), int(DISPLAY_Y * 0.1)))
         gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.80), int(DISPLAY_Y * 0.1)))
         gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.80), int(DISPLAY_Y * 0.2)))
         gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.80), int(DISPLAY_Y * 0.3)))
@@ -250,7 +269,7 @@ def getFontPixels(font, size, word):
     return size
 
 
-def writeToBubble(word, pos):
+def writeToBubble(word, pos, color):
     """ this writes the text to the middle of a bubble """
     fontSize = int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     font = 'Arial'
@@ -258,7 +277,7 @@ def writeToBubble(word, pos):
     horizontalMiddle = int(pixelFontSize[0]/3) # dividing by 2 wasn't working?? TODO: essplain
     vertMiddle = int(pixelFontSize[1]/3)
     wordFont = pygame.font.SysFont(font, fontSize)
-    wordBubble = wordFont.render(word, False, BLACK)
+    wordBubble = wordFont.render(word, False, color)
     gameDisplay.blit(wordBubble, (int(pos[0]-horizontalMiddle), pos[1]-vertMiddle))
 
 
@@ -278,16 +297,17 @@ class Bubble:
     def move(self, targetPosition):
         self.erase()
         self.pos = targetPosition
-        self.draw()
+        self.draw(BLACK)
         return
 
-    def draw(self):
+    def draw(self, color):
         drawBubble(self.pos, self.colour)
-        writeToBubble(self.word, self.pos)
+        writeToBubble(self.word, self.pos, color)
         return
 
     def erase(self):
         drawBubble(self.pos, WHITE)
+        writeToBubble(self.word, self.pos, WHITE)
         return
 
 # TODO: put this in an appropriate other file
