@@ -248,16 +248,16 @@ class Board:
         it will ultimately be used for things like score
         and varioius similar metrics
         """
-        meme_font = pygame.font.SysFont('Comic Sans MS', 30)
+        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
         # write some memes on the sides #
         # left_meme = meme_font.render('It ya boi', False, BLACK)
         right_meme = meme_font.render('To play click', False, BLACK)
         right_meme_pt2 = meme_font.render('where you want', False, BLACK)
         right_meme_pt3 = meme_font.render('the bubble to go', False, BLACK)
         # gameDisplay.blit(left_meme, (int(DISPLAY_X * 0.05), int(DISPLAY_Y * 0.1)))
-        gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.80), int(DISPLAY_Y * 0.1)))
-        gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.80), int(DISPLAY_Y * 0.2)))
-        gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.80), int(DISPLAY_Y * 0.3)))
+        gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.1)))
+        gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.2)))
+        gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.3)))
 
 ### END BOARD CLASS AND HELPERS ###
 
@@ -293,7 +293,7 @@ class Bubble:
         self.colour = colour        # the colour that the bubble will be
         return
 
-    #TODO: this function should move a bubble around the screen
+    # TODO: this function should move a bubble around the screen
     def move(self, targetPosition):
         self.erase()
         self.pos = targetPosition
