@@ -94,7 +94,9 @@ def game_loop():
     board.createWordList()
     board.drawBoard()
 
+    num_loops = 0
     while running:
+        num_loops += 1
         board.drawBoard()
         board.drawAllBubbles()
         board.addToBoard()
@@ -120,7 +122,7 @@ def game_loop():
                 pos = getPos()
                 # if (checkInbound(pos, board) == True):
                 if board.board.collidepoint(pos):
-                    print(board.future_bubbles)
+                    #print(board.future_bubbles)
                     board.shootBubble(pos)
                 else:
                     #TODO: display an error
@@ -128,6 +130,12 @@ def game_loop():
 
             if event.type == pygame.QUIT:
                 running = False
+
+        if(board.shooting != []):
+            if(num_loops%50 == 0):
+                board.shoot_bubble.erase()
+            board.shoot_bubble.pos = board.shooting[0]
+            board.shooting.pop(0)
 
         pygame.display.update()
         clock.tick(60)
@@ -162,6 +170,7 @@ class Board:
         self.success_popped = False
         self.won = False
         self.game_over = False
+        self.shooting = []
 
 
     def shootBubble(self, dest_pos):
@@ -169,7 +178,7 @@ class Board:
         hit_array = []
         bubble = self.shoot_bubble
 
-        self.shoot_bubble.erase()
+        self.shooting = self.shoot_bubble.move(dest_pos)
 
         # remove from future bubbles
         self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
@@ -236,10 +245,10 @@ class Board:
 
 
     def drawAllBubbles(self):
-        self.shoot_bubble.draw(BLACK)
+        self.shoot_bubble.draw()
         for bubble in self.board_bubbles:
             if (bubble != 0):
-                bubble.draw(BLACK)
+                bubble.draw()
 
 
     def createWordList(self):
@@ -373,14 +382,36 @@ class Bubble:
 
     # TODO: this function should move a bubble around the screen
     def move(self, target_position):
+        """this part is going to animate the bubble moving"""
+        x1 = self.pos[0]
+        y1 = self.pos[1]
+        x2 = target_position[0]
+        y2 = target_position[1]
+        difX = x2 - x1
+        difY = y2 - y1
+        print(difX, difY)
+        dist = math.sqrt((x2-x1)**2 + (y2-y1)**2)
+        num_positions = int(dist / 10)
+        intermediate_positions = [(0,0)] * num_positions
+        for i in range(0, len(intermediate_positions)):
+            xPos = x1+(difX*(i+1)/num_positions)
+            yPos = y1+(difY*(i+1)/num_positions)
+            intermediate_positions[i] = (xPos, yPos)
+        # for i in intermediate_positions:
+        #     self.erase()
+        #     print(self.pos, i)
+        #     pygame.time.wait(10)
+        #     self.pos = i
+        #     self.draw()
+        #     pygame.time.wait(10)
+
         self.erase()
         self.pos = target_position
-        self.draw(BLACK)
-        return
+        return intermediate_positions
 
-    def draw(self, color):
+    def draw(self):
         drawBubble(self.pos, self.colour)
-        writeToBubble(self.word, self.pos, color)
+        writeToBubble(self.word, self.pos, BLACK)
         return
 
     def erase(self):
