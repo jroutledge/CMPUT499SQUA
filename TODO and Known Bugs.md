@@ -13,6 +13,7 @@
 * make popus time sensitive
 * Refactor animation to be less dependant on main loop
 * consolidate game loop counters
+* refactor the heck out of the shoot animation
 
 * add help for word definition of current shooting word
 * eventually make popups into a class

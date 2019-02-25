@@ -111,6 +111,7 @@ def game_loop():
 
             if board.future_bubbles == []:
                 board.game_over = True
+                board.future_bubbles = [(" ", WHITE)] #TODO: fix this kludge
                 print("You lost!")
 
             if board.board_bubbles == []:
@@ -132,10 +133,18 @@ def game_loop():
                 running = False
 
         if(board.shooting != []):
-            if(num_loops%50 == 0):
-                board.shoot_bubble.erase()
+            #if(num_loops%50 == 0):
+            board.shoot_bubble.erase()
             board.shoot_bubble.pos = board.shooting[0]
+            board.shoot_bubble.draw()
+            pygame.time.wait(10)
             board.shooting.pop(0)
+            if board.shooting == []:
+                # load in new bubble
+                board.popMatches()
+                #board.shoot_bubble.erase()
+                board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+                            board.future_bubbles[0][0], board.future_bubbles[0][1])
 
         pygame.display.update()
         clock.tick(60)
@@ -171,6 +180,7 @@ class Board:
         self.won = False
         self.game_over = False
         self.shooting = []
+        self.current_matches = []
 
 
     def shootBubble(self, dest_pos):
@@ -196,16 +206,12 @@ class Board:
         # detect matches and pop as needed
         self.findMatches()
 
-        # load in new bubble
-        self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
-                            self.future_bubbles[0][0], self.future_bubbles[0][1])
         # self.shoot_bubble.draw(BLACK)
-        # TODO: THIS ISN'T WORKING
 
         return hit_array
 
 
-    def findMatches(self):
+    def findMatches(self): #TODO: this function is bloated and is leading to problems in animating the shooting
         """
         finds matches that the bubble has made
         'pops' the matches and then displays a good job message
@@ -218,12 +224,17 @@ class Board:
             for onBoard in self.board_bubbles:
                 if (self.board_bubbles == 0):
                     pass
-                if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour:
+                if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour: #TODO: we should NOT be comparing on colour
                     # it's matching and touching
                     if onBoard not in matches:
                         matches.append(onBoard)
 
-        #print(matches)
+        self.current_matches = matches
+        return
+        
+    def popMatches(self):
+        bubble = self.shoot_bubble
+        matches = self.current_matches
         if matches != [bubble]:
             # erase the matches
             for b in matches:
@@ -332,7 +343,7 @@ class Board:
             # start the counter
             POPUP_COUNTER += 1
             # store the popup for deletion later
-            POPUP = ['Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
+            POPUP = ['Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4)]
 
 ### END BOARD CLASS AND HELPERS ###
 
@@ -359,6 +370,7 @@ def getFontPixels(font, size, word):
 def writeToBubble(word, pos, color):
     """ this writes the text to the middle of a bubble """
     fontSize = int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
+    #TODO: make this catch divide by zero errors
     font = 'Arial'
     pixelFontSize = getFontPixels(font, fontSize, word)
     horizontalMiddle = int(pixelFontSize[0]/3) # dividing by 2 wasn't working?? TODO: essplain
