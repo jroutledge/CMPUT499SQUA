@@ -5,12 +5,14 @@ from scipy.spatial import KDTree
 import random
 import math
 import time
+import requests
+from thesaurus import Word
 
 # Global values for the display size
 # (we will always multiply these so that we can scale the resolution)
-DISPLAY_X = 800
-DISPLAY_Y = 600
-BUBBLE_RADIUS =  int((DISPLAY_X * DISPLAY_Y) / 13000)
+DISPLAY_X = 1000#800
+DISPLAY_Y = 1000#600
+BUBBLE_RADIUS =  int((DISPLAY_X * DISPLAY_Y) / 15000)
 SHOOT_POSITION = (int(DISPLAY_X / 2), int(DISPLAY_Y * 0.8))
 # Global variables for controlling the duration of popups
 POPUP_COUNTER = 0
@@ -29,6 +31,8 @@ LIGHT_BLUE = (0, 100, 255)
 TEXT_COLOUR = (0, 0, 0)
 BACKGROUND_COLOUR = (255, 255, 255)
 # Globals for the thesaurus TODO: make this a thesaurus library and dynamically generate
+#w = Word('box')
+#print(w.synonyms())
 WORDS = {
         'good':['nice','excellent','exceptional', 'wonderful', 'positive'], \
         'bad':['awful', 'evil','despicable', 'mean'], \
@@ -85,7 +89,7 @@ def game_loop():
     pygame.init()
     pygame.font.init() # for writing text to pygame
     gameDisplay = pygame.display.set_mode((DISPLAY_X, DISPLAY_Y))
-    pygame.display.set_caption('Version 0.2')
+    pygame.display.set_caption('Version 0.3')
     gameDisplay.fill(BACKGROUND_COLOUR)
     clock = pygame.time.Clock()
     running = True
@@ -133,18 +137,17 @@ def game_loop():
                 running = False
 
         if(board.shooting != []):
-            #if(num_loops%50 == 0):
             board.shoot_bubble.erase()
             board.shoot_bubble.pos = board.shooting[0]
             board.shoot_bubble.draw()
-            pygame.time.wait(10)
+            pygame.time.wait(2)
             board.shooting.pop(0)
             if board.shooting == []:
                 # load in new bubble
                 board.popMatches()
-                #board.shoot_bubble.erase()
                 board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             board.future_bubbles[0][0], board.future_bubbles[0][1])
+            #TODO: make it so when shot, the match doesn't erase first, then again later
 
         pygame.display.update()
         clock.tick(60)
