@@ -3,6 +3,7 @@ from sys import argv
 import os
 from os import path
 
+'''This script is to take a finalized list of each grade level and add them into the database'''
 def main():
     if len(argv) != 2:
         print("Try harder in the future please")

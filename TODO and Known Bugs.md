@@ -23,3 +23,9 @@
 * create a cursor around the mouse on the game screen?
 * create a log for errors
 * add resolution options
+
+### TODOs for database ###
+
+* find more word lists
+* make processor for finalized wordlist by grade level (to aggregate lists from various sources)
+* fix steup.py to fill out database and save as finalized database that we will load into the game
