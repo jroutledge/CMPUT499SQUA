@@ -7,6 +7,7 @@ import math
 import time
 import requests
 from thesaurus import Word
+from PyDictionary import PyDictionary
 
 # Global values for the display size
 # (we will always multiply these so that we can scale the resolution)
@@ -33,6 +34,8 @@ BACKGROUND_COLOUR = (255, 255, 255)
 # Globals for the thesaurus TODO: make this a thesaurus library and dynamically generate
 #w = Word('box')
 #print(w.synonyms())
+dictionary = PyDictionary()
+print (dictionary.synonym("good"))
 WORDS = {
         'good':['nice','excellent','exceptional', 'wonderful', 'positive'], \
         'bad':['awful', 'evil','despicable', 'mean'], \
