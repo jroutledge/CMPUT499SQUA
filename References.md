@@ -11,6 +11,8 @@
 
 * https://stackoverflow.com/questions/20842801/how-to-display-text-in-pygame
 * https://stackoverflow.com/questions/16096754/remove-none-value-from-a-list-without-removing-the-0-value
+* https://stackoverflow.com/questions/9835762/how-do-i-find-the-duplicates-in-a-list-and-create-another-list-with-them
+
 
 ## Research Resources ##
 
