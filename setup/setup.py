@@ -5,9 +5,13 @@ from sys import argv
 import os
 from os import path
 from processing import Processor as proc
+from nltk.corpus import wordnet as wn
 
 '''This script is to take a finalized list of each grade level and add them into the database'''
 def main():
+    thingy = wn.synsets('small')
+    print(thingy)
+    print(thingy[0].lemma_names())
     if len(argv) != 2:
         print("Try harder in the future please")
         sys.exit()

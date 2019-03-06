@@ -58,7 +58,8 @@ class Processor:
 
 def test():
     for grade_level in range(1, 9):
-        p = Processor(grade_level, "test_output.txt", os.getcwd())
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+        p = Processor(grade_level, "test_output.txt", dirname)
         print("---------------------------------------------------")
         print("STARTING GRADE LEVEL ", grade_level)
         print("---------------------------------------------------")
