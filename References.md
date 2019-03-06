@@ -6,7 +6,7 @@
 2. [This tutorial was used to learn how to implement pygame](https://pythonprogramming.net/pygame-python-3-part-1-intro/)
 3. [This cheat sheet was  used for git related thigns](http://supercollider.sourceforge.net/wiki/index.php/Developer_cheatsheet_for_git)
 4. [This cheat for markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) \(whoa, meta\)
-5. [This is about NLTK's WordNet API](http://www.nltk.org/howto/wordnet.html)
+5. [This is for using the thesaurus in python](https://pypi.org/project/thesaurus/)
 
 5. Various stack overflow pages
 

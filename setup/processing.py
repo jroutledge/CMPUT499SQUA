@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 import os
 from nltk.corpus import wordnet as wn
+from thesaurus import Word
+from thesaurus.exceptions import MisspellingError
+
 
 
 class Processor:
@@ -9,42 +12,88 @@ class Processor:
     a given grade level
     """
 
-    def __init__(self, gradeLevel, outputFile, pathToWordLists):
-        """ """
+    def __init__(self, gradeLevel, pathToWordLists):
+        """
+        initialize processor
+        """
         self.gradeLevel = str(gradeLevel)           # grade level desired for list to be compiled
-        self.outputFileName = outputFile            # name of file to output the list to
-        self.outputFile = None                      # file pointer
+        self.outputFileNames = ["table_StartWords.txt",   # name of files to output the lists to
+                                "table_SynWords.txt",
+                                "table_AntWords.txt"]
+        self.outputFiles = None                      # file pointer
         self.path = str(pathToWordLists)
         self.words = []
 
     def start(self):
-        """ start processing """
-        self.outputFile = open(self.outputFileName, "w")
+        """
+        start processing
+        """
+        # open files
+        self.outputFiles = [open(self.outputFileNames[0], "a"),
+                            open(self.outputFileNames[1], "a"),
+                            open(self.outputFileNames[2], "a")]
         # put all the words from the files into an array
         self.process_folders()
         self.process_words()
 
     def end(self):
-        """ clean up and end processing """
-        self.outputFile.close()
+        """
+        clean up and end processing
+        """
+        self.outputFiles[0].close()
+        self.outputFiles[1].close()
+        self.outputFiles[2].close()
 
     def process_words(self):
-        # sort words
-        self.words.sort()
+        """
+        sort words, look for duplicates, then get synonyms
+        and write to output files
+        """
         # print(self.words)
-        # get duplicate words
+        # get duplicate words - the words we want to use
         words = self.words
-        duplicates = set([x for x in words if words.count(x) > 1])
+        duplicates = list(set([x for x in words if words.count(x) > 1]))
+        duplicates.sort()
         print(duplicates)
-        print(len(duplicates))
+
+        """ try a different way """
+        for word in duplicates:
+            try:
+                w = Word(word)
+            except MisspellingError:
+                continue
+            else:
+
+                syns = w.synonyms()
+                if syns:
+                    for s in syns:
+                        self.outputFiles[1].write(word + " " + s + "\n")
+
+                ants = w.antonyms()
+                if ants:
+                    for a in ants:
+                        self.outputFiles[2].write(word + " " + a + "\n")
+
+                if syns or ants:
+                    self.outputFiles[0].write(word + " " + self.gradeLevel + "\n")
+
+    def get_synonyms(self, word):
+        """
+        use nltk to get the synonyms
+        """
+        return wn.synsets(word)
 
     def process_folders(self):
+        """
+        look through folders for word lists of a grade level
+        """
         # get folder names
         folders = os.listdir(self.path + "/word_lists")
 
         for folder in folders:
 
-            fname = self.path + "/word_lists/" + folder + "/Grade" + self.gradeLevel + ".txt"
+            fname = self.path + "/word_lists/" + folder + \
+                    "/Grade" + self.gradeLevel + ".txt"
             f = open(fname, "r")
 
             # get all the words from each file
@@ -57,15 +106,17 @@ class Processor:
 
 
 def test():
+    print("STARTING PROCESSING")
     for grade_level in range(1, 9):
         dirname, filename = os.path.split(os.path.abspath(__file__))
-        p = Processor(grade_level, "test_output.txt", dirname)
+        p = Processor(grade_level, dirname)
         print("---------------------------------------------------")
         print("STARTING GRADE LEVEL ", grade_level)
         print("---------------------------------------------------")
 
         p.start()
         p.end()
+    print("ENDING PROCESSING")
 
 
 if __name__ == "__main__":
