@@ -14,6 +14,7 @@
 * https://stackoverflow.com/questions/16096754/remove-none-value-from-a-list-without-removing-the-0-value
 * https://stackoverflow.com/questions/9835762/how-do-i-find-the-duplicates-in-a-list-and-create-another-list-with-them
 * https://stackoverflow.com/questions/19258652/how-to-get-synonyms-from-nltk-wordnet-python
+* https://stackoverflow.com/questions/1296501/find-path-to-currently-running-file
 
 ## Research Resources ##
 
