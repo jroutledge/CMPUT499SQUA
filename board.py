@@ -30,8 +30,8 @@ def erase_popup(message, pos_x, pos_y, gameDisplay):
 class Board:
     def __init__(self):
         self.top = int(DISPLAY_Y * 0.1)
-        self.left = int(DISPLAY_X * 0.25)
-        self.width = int(DISPLAY_X / 2)
+        self.left = int(DISPLAY_X * 0.12)
+        self.width = int(DISPLAY_X * 0.76)
         self.height = int(DISPLAY_Y * 0.8)
         self.future_bubbles = []
         self.board_len = calcBoard(self)
@@ -186,9 +186,9 @@ class Board:
         right_meme_pt2 = meme_font.render('where you want', False, BLACK)
         right_meme_pt3 = meme_font.render('the bubble to go', False, BLACK)
         # gameDisplay.blit(left_meme, (int(DISPLAY_X * 0.05), int(DISPLAY_Y * 0.1)))
-        gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.1)))
-        gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.2)))
-        gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.3)))
+        gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.02)))
+        gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.04)))
+        gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.06)))
         if self.won:
             # create the success popup
             success_poppup = Popup('You Won! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), gameDisplay, BLUE)
