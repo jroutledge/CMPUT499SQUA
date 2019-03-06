@@ -16,6 +16,9 @@
 
 ### Word Lists by Grade Level ###
 1. https://www.flocabulary.com/wordlists/
+2. https://www.spellingcity.com/grade-level-lists.html
+http://www.aaaspell.com/spelling/2
+https://www.greatschools.org/gk/articles/academic-vocabulary-words-for-first-graders/
 
 ### Gamification ###
 

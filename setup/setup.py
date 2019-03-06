@@ -1,7 +1,10 @@
+#!/usr/bin/python3
+
 import sys
 from sys import argv
 import os
 from os import path
+from processing import Processor as proc
 
 '''This script is to take a finalized list of each grade level and add them into the database'''
 def main():
