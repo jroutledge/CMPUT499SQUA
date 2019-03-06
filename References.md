@@ -6,13 +6,14 @@
 2. [This tutorial was used to learn how to implement pygame](https://pythonprogramming.net/pygame-python-3-part-1-intro/)
 3. [This cheat sheet was  used for git related thigns](http://supercollider.sourceforge.net/wiki/index.php/Developer_cheatsheet_for_git)
 4. [This cheat for markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) \(whoa, meta\)
+5. [This is about NLTK's WordNet API](http://www.nltk.org/howto/wordnet.html)
 
 5. Various stack overflow pages
 
 * https://stackoverflow.com/questions/20842801/how-to-display-text-in-pygame
 * https://stackoverflow.com/questions/16096754/remove-none-value-from-a-list-without-removing-the-0-value
 * https://stackoverflow.com/questions/9835762/how-do-i-find-the-duplicates-in-a-list-and-create-another-list-with-them
-
+* https://stackoverflow.com/questions/19258652/how-to-get-synonyms-from-nltk-wordnet-python
 
 ## Research Resources ##
 

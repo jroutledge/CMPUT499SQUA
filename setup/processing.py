@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import os
-import subprocess
+from nltk.corpus import wordnet as wn
 
 
 class Processor:
