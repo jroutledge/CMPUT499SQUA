@@ -5,8 +5,7 @@ c = conn.cursor()
 c.execute('''
 -- CREATE TABLE "StartWords" -----------------------------------
 CREATE TABLE IF NOT EXISTS StartWords(
-	id Integer NOT NULL PRIMARY KEY,
-	word Text NOT NULL,
+	word Text NOT NULL PRIMARY KEY,
     grade_level Integer NOT NULL
  );
 -- -------------------------------------------------------------
@@ -14,18 +13,18 @@ CREATE TABLE IF NOT EXISTS StartWords(
 c.execute('''
 -- CREATE TABLE "SynWords" -------------------------------------
 CREATE TABLE IF NOT EXISTS SynWords(
-	id Integer NOT NULL,
+	word Integer NOT NULL,
 	syn Text NOT NULL,
-    FOREIGN KEY ( id ) REFERENCES "StartWords"( id )
+    FOREIGN KEY ( word ) REFERENCES "StartWords"( word )
 );
 -- -------------------------------------------------------------
 ''')
 c.execute('''
 -- CREATE TABLE "AntWords" -------------------------------------
 CREATE TABLE IF NOT EXISTS AntWords(
-	id Integer NOT NULL,
+	word Integer NOT NULL,
 	ant Text NOT NULL,
-    FOREIGN KEY ( id ) REFERENCES "StartWords"( id )
+    FOREIGN KEY ( word ) REFERENCES "StartWords"( word )
 );
 -- -------------------------------------------------------------
 ''')
