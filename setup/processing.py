@@ -5,11 +5,12 @@ from thesaurus import Word
 from thesaurus.exceptions import MisspellingError
 
 
-
 class Processor:
     """
     Processor class to create final word lists for
-    a given grade level
+    a given grade level. Processor is set up in a way
+    that it will grab anything in the word_lists folders
+    to add to each grade level for the data set.
     """
 
     def __init__(self, gradeLevel, pathToWordLists):
@@ -46,15 +47,17 @@ class Processor:
 
     def process_words(self):
         """
-        sort words, look for duplicates, then get synonyms
-        and write to output files
+        Sort words, look for duplicates, then get synonyms
+        and write to output files. Looking for duplicates
+        here because that is an indication that multiple
+        sources think the term is appropriate for the
+        given grade level.
         """
         # print(self.words)
         # get duplicate words - the words we want to use
         words = self.words
         duplicates = list(set([x for x in words if words.count(x) > 1]))
         duplicates.sort()
-        print(duplicates)
 
         """ try a different way """
         for word in duplicates:

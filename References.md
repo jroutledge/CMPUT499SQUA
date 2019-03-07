@@ -8,13 +8,14 @@
 4. [This cheat for markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) \(whoa, meta\)
 5. [This is for using the thesaurus in python](https://pypi.org/project/thesaurus/)
 
-5. Various stack overflow pages
+6. Various stack overflow (or similar) pages
 
 * https://stackoverflow.com/questions/20842801/how-to-display-text-in-pygame
 * https://stackoverflow.com/questions/16096754/remove-none-value-from-a-list-without-removing-the-0-value
 * https://stackoverflow.com/questions/9835762/how-do-i-find-the-duplicates-in-a-list-and-create-another-list-with-them
 * https://stackoverflow.com/questions/19258652/how-to-get-synonyms-from-nltk-wordnet-python
 * https://stackoverflow.com/questions/1296501/find-path-to-currently-running-file
+* https://code-maven.com/listing-a-directory-using-python 
 
 ## Research Resources ##
 
