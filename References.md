@@ -16,14 +16,15 @@
 * https://stackoverflow.com/questions/19258652/how-to-get-synonyms-from-nltk-wordnet-python
 * https://stackoverflow.com/questions/1296501/find-path-to-currently-running-file
 * https://code-maven.com/listing-a-directory-using-python 
+* https://stackoverflow.com/questions/123198/how-do-i-copy-a-file-in-python
 
 ## Research Resources ##
 
 ### Word Lists by Grade Level ###
 1. https://www.flocabulary.com/wordlists/
 2. https://www.spellingcity.com/grade-level-lists.html
-http://www.aaaspell.com/spelling/2
-https://www.greatschools.org/gk/articles/academic-vocabulary-words-for-first-graders/
+3. http://www.aaaspell.com/spelling/2
+4. https://www.greatschools.org/gk/articles/academic-vocabulary-words-for-first-graders/
 
 ### Gamification ###
 

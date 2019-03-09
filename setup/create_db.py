@@ -82,7 +82,6 @@ class Creator:
 
                 statement = "INSERT INTO \"" + table + "\" VALUES (\"" + \
                             line[0] + "\", \"" + line[1] + "\");"
-                print(statement)
                 self.c.execute(statement)
 
         self.conn.commit()

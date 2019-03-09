@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import os
-from nltk.corpus import wordnet as wn
 from thesaurus import Word
 from thesaurus.exceptions import MisspellingError
 
