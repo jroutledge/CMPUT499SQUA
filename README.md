@@ -3,21 +3,26 @@
 ## Build and Run Instructions 
 
 * Note, project supported on Linux and MacOS with Python 2.7
-1. Ensure Python2.7 and pip are installed 
-    > sudo apt-get install python2.7
-    
-    > sudo apt-get install python-pip
+1. Ensure Python2.7 and it's pip are installed, as well as Python3 and it's pip 
+    > sudo apt update \
+    sudo apt-get install python2.7 \
+    sudo apt-get install python-pip \
+    sudo apt-get install python3 \ 
+    sudo apt-get install python3-pip
 2. Install PyGame, Pillow, and SciPy packages 
-    > pip install PyGame
-    
-    > pip install Pillow 
-    
-    > pip install SciPy
+    > pip install PyGame \
+    pip install Pillow \
+    pip install SciPy \
+    pip3 install thesaurus==0.2.3 
 3. Clone repository on local machine 
     > git clone https://github.com/jroutledge/CMPUT499SQUA.git
 4. Navigate to folder 
-    > cd <path to folder>/CMPUT499SQUA
-5. To run the game, run:
+    > cd <path to folder>/CMPUT499SQUA/setup
+5. Run the setup script  
+    > python3 setup.py
+6. Return to main project folder
+    > cd ..
+7. To run the game, run:
     > python game.py
 
 ---
