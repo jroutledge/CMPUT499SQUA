@@ -9,7 +9,7 @@ class Creator:
     """
 
     def __init__(self, path):
-        self.conn = sqlite3.connect('init.db')
+        self.conn = sqlite3.connect(path + '/init.db')
         self.c = self.conn.cursor()
         self.path = path
 
@@ -74,7 +74,7 @@ class Creator:
         tableNames = ["StartWords", "SynWords", "AntWords"]
 
         for i in range(0, 3):
-            f = open(fileNames[i], "r")
+            f = open(self.path + '/' + fileNames[i], "r")
             table = tableNames[i]
             for l in f:
                 line = l.rstrip()

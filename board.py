@@ -4,7 +4,7 @@ import random
 import pygame
 from popup import Popup
 from scipy.spatial import KDTree
-from globals import *
+from globe import *
 
 def calcBoard(board):
     """ this calculates the size of the board array """

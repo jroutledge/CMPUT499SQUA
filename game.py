@@ -4,7 +4,10 @@ import time
 import bubble
 from board import Board
 from bubble import Bubble
-from globals import *
+from globe import *
+import argparse
+
+#TODO: look into game slowdown, and also connect frontend to back
 
 def quitGame():
     """ this is a helper to quit the game """
@@ -40,7 +43,7 @@ def game_loop():
     pygame.init()
     pygame.font.init() # for writing text to pygame
     gameDisplay = pygame.display.set_mode((DISPLAY_X, DISPLAY_Y))
-    pygame.display.set_caption('Version 0.3')
+    pygame.display.set_caption('Version 1.0')
     gameDisplay.fill(BACKGROUND_COLOUR)
     clock = pygame.time.Clock()
     running = True
@@ -62,7 +65,7 @@ def game_loop():
             if POPUP_COUNTER >= 20:
                 POPUP_COUNTER = 0
                 i = 0 #TODO: find a way for it to find the popup -> board.current_popups.index(popped_bubble)
-                board.current_popups.pop(i).erase()
+                #board.current_popups.pop(i).erase()
                 board.success_popped = False
 
             if board.future_bubbles == []:
@@ -106,6 +109,14 @@ def game_loop():
 
     quitGame()
 
-if __name__ == '__main__':
-    print(BUBBLE_RADIUS)
+def main():
+    parser = argparse.ArgumentParser(description='Play the game')
+    parser.add_argument('grade_level', help="the grade level of the words")
+    parser.add_argument('mode', help="synonym or antonym mode")
+    args = parser.parse_args()
+    init(args.grade_level, args.mode)
+    #time.sleep(2)
     game_loop()
+
+if __name__ == '__main__':
+    main()
