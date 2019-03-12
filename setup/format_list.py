@@ -1,5 +1,6 @@
 """ meant for formatting word lists before processing """
 
+import os
 
 def main():
     """ """
@@ -7,7 +8,8 @@ def main():
 
     for name in files:
         # f_name = "word_lists/aaaspell.com/" + name
-        f_name = "word_lists/greatschools.org/" + name
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+        f_name = dirname + "/word_lists/greatschools.org/" + name
         f = open(f_name, "r")
 
         lines = f.readlines()

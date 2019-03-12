@@ -1,7 +1,7 @@
 import pygame
 import math
 from PIL import ImageFont
-from globals import *
+from globe import *
 
 def collide(pos1, pos2):
     """ checks if 2 points are within 2.5*radius of eachother """

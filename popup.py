@@ -1,5 +1,5 @@
 import pygame
-from globals import *
+from globe import *
 
 class Popup():
     def __init__(self, text, pos_x, pos_y, gameDisplay, colour=BLACK):
