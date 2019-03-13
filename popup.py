@@ -15,7 +15,6 @@ class Popup():
         message = self.font.render(self.text, False, self.colour)
         self.gameDisplay.blit(message, (self.pos_x, self.pos_y))
 
-
     def erase(self):
         #POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
         message = self.font.render(self.text, False, WHITE)

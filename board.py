@@ -1,10 +1,12 @@
 from bubble import *
+from popup import Popup
+
 import math
 import random
 import pygame
-from popup import Popup
 from scipy.spatial import KDTree
 from globe import *
+
 
 def calcBoard(board):
     """ this calculates the size of the board array """
@@ -14,6 +16,7 @@ def calcBoard(board):
     num_bubbles = int(math.floor(bubbleAreaWidth/(BUBBLE_RADIUS * 2)))
     board_len = (num_bubbles * 3) - 1 # middle row has 1 less
     return board_len
+
 
 def createPopup(words, colour, pos_x, pos_y, gameDisplay):
     POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
@@ -47,7 +50,7 @@ class Board:
         self.shooting = []
         self.current_matches = []
         self.current_popups = []
-
+        self.help_box = None    # rect object on the board
 
     def shootBubble(self, dest_pos, gameDisplay):
         """ this will shoot a bubble from its current location to the position specified """
@@ -73,7 +76,6 @@ class Board:
         self.findMatches()
 
         return hit_array
-
 
     def findMatches(self): #TODO: this function is bloated and is leading to problems in animating the shooting
         """
@@ -113,18 +115,22 @@ class Board:
             self.success_popped = True
         return
 
-
     def drawBoard(self, gameDisplay):
+        # draw board outline
         self.board = pygame.draw.rect(gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
 
+        # draw help box
+        self.help_box = pygame.draw.rect(gameDisplay, BLACK, (0, 0, 100, 40), 2)
+        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
+        help_meme = meme_font.render('HELP', False, BLACK)
+        gameDisplay.blit(help_meme, (20, 5))
 
     def drawAllBubbles(self, gameDisplay):
         self.shoot_bubble.draw(gameDisplay)
         for bubble in self.board_bubbles:
             if (bubble != 0):
                 bubble.draw(gameDisplay)
-
 
     def createWordList(self):
         """ this will populate the game board with words """
@@ -142,7 +148,6 @@ class Board:
         bubbleList = self.createBubbles(word_colour_list)
         self.board_bubbles = bubbleList
         print(bubbleList)
-
 
     def createBubbles(self, word_colour_list):
         row_num = 0
@@ -169,7 +174,6 @@ class Board:
                     #TODO: math the above line, is it a third?? a quarter?? somewhere in between??
             self.board_positions[i] = [bubbleLeft, bubbleTop]
         return bubbleList
-
 
     def addToBoard(self, gameDisplay):
         global POPUP_COUNTER, POPUP
