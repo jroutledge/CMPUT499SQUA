@@ -9,11 +9,14 @@ def init(grade_level, mode):
 
     path, f = os.path.split(os.path.abspath(__file__))
     conn = sqlite3.connect(path + '/words.db')
+
+    print(path)
+
     d = {}
     #TODO: error handle incorrect args
-    if mode == 'Synonym':
+    if mode.lower() == 'synonym':
         table2 = 'SynWords'
-    elif mode == 'Antonym':
+    elif mode.lower() == 'antonym':
         table2 = 'AntWords'
     else:
         table2 = 'error'
@@ -86,3 +89,24 @@ BACKGROUND_COLOUR = (255, 255, 255)
 # }
 WORD_COLOURS = [RED, GREEN, BLUE, YELLOW, PURPLE, TURQUOISE] #TODO: add colours as needed
 NUM_WORDS = len(WORD_COLOURS)
+
+# Globals for helpp message
+HELP_MSG = ["Game Instructions and Help: ",
+            "To play game, try and match the words according to ",
+            "their meanings. If playing on synonym mode, this ",
+            "means matching words like 'big' and 'huge' together.",
+            " If playing on antonym mode, this means matching ",
+            "words like 'big' and 'small' together. Shoot the ",
+            "bubble at the word you think it matches, if it's ",
+            "a match it will pop. Otherwise it willstay. If you ",
+            "pop all the bubbles you win! ",
+            "To exit this menu, press any key."]
+HELP_X = int(DISPLAY_X * 0.12)
+HELP_Y = int(DISPLAY_Y * 0.1)
+HELP_WIDTH = int(DISPLAY_X * 0.76)
+HELP_HEIGHT = int(DISPLAY_Y * 0.8)
+
+# font
+# from pygame.font import SysFont
+# meme_font = pygame.font.SysFont('Comic Sans MS', 25)
+
