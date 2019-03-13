@@ -83,16 +83,12 @@ def game_loop():
                 if board.board.collidepoint(pos):
                     # valid selection for buble, shoot it
                     board.shootBubble(pos, gameDisplay)
-                elif board.help_box.collidepoint(pos):
-                    # make help popup
-                    meme_font = pygame.font.SysFont('Comic Sans MS', 25)
-                    pygame.draw.rect(gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
-                    pygame.draw.rect(gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
-                    for i, l in enumerate(HELP_MSG):
-                        gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 25*i))
-                        # meme_font.render(l, False, BLACK)
-                    pygame.display.update()
 
+                elif board.help_box.collidepoint(pos):
+                    # make help box appear
+                    board.displayHelpBox(gameDisplay)
+                    # pause until user presses a button
+                    # clear box and resume game 
 
                 else:
                     #TODO: display an error

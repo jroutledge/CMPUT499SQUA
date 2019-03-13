@@ -223,3 +223,12 @@ class Board:
             # store the popup for deletion later
             #POPUP = ['Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4)]
 
+    def displayHelpBox(self, gameDisplay):
+        """ displays the help box for the user """
+        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
+        pygame.draw.rect(gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
+        pygame.draw.rect(gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
+        for i, l in enumerate(HELP_MSG):
+            gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 25 * i))
+            # meme_font.render(l, False, BLACK)
+        pygame.display.update()
