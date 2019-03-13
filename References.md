@@ -7,8 +7,9 @@
 3. [This cheat sheet was  used for git related thigns](http://supercollider.sourceforge.net/wiki/index.php/Developer_cheatsheet_for_git)
 4. [This cheat for markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) \(whoa, meta\)
 5. [This is for using the thesaurus in python](https://pypi.org/project/thesaurus/)
+6. [This pygame drawing cheat sheet](http://www.cs.ucsb.edu/~pconrad/cs5nm/topics/pygame/drawing/)
 
-6. Various stack overflow (or similar) pages
+7. Various stack overflow (or similar) pages
 
 * https://stackoverflow.com/questions/20842801/how-to-display-text-in-pygame
 * https://stackoverflow.com/questions/16096754/remove-none-value-from-a-list-without-removing-the-0-value
