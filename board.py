@@ -116,7 +116,9 @@ class Board:
             self.success_popped = True
         return
 
-    def drawBoard(self):
+    def drawBoard(self, ):
+        # draw white board
+        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
         # draw board outline
         self.board = pygame.draw.rect(self.gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
@@ -223,12 +225,12 @@ class Board:
             # store the popup for deletion later
             #POPUP = ['Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4)]
 
-    def displayHelpBox(self, gameDisplay):
+    def displayHelpBox(self):
         """ displays the help box for the user """
-        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
-        pygame.draw.rect(gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
-        pygame.draw.rect(gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
+        meme_font = pygame.font.SysFont('Comic Sans MS', 30)
+        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
+        pygame.draw.rect(self.gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
         for i, l in enumerate(HELP_MSG):
-            gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 25 * i))
+            self.gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 32 * i))
             # meme_font.render(l, False, BLACK)
         pygame.display.update()

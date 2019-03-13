@@ -80,13 +80,20 @@ def game_loop():
                 pos = getPos()
                 if board.board.collidepoint(pos):
                     # valid selection for buble, shoot it
-                    board.shootBubble(pos, gameDisplay)
+                    board.shootBubble(pos)
 
                 elif board.help_box.collidepoint(pos):
                     # make help box appear
-                    board.displayHelpBox(gameDisplay)
+                    board.displayHelpBox()
                     # pause until user presses a button
-                    # clear box and resume game 
+                    paused = True
+                    while paused:
+                        for ev in pygame.event.get():
+                            if ev.type == pygame.KEYDOWN:
+                                paused = False
+                                board.drawBoard()
+                                board.drawAllBubbles()
+                                board.addToBoard()
 
                 else:
                     #TODO: display an error
