@@ -48,16 +48,14 @@ def game_loop():
     clock = pygame.time.Clock()
     running = True
     
-    board = Board()
+    board = Board(gameDisplay)
     board.createWordList()
-    board.drawBoard(gameDisplay)
+    board.drawBoard()
 
-    num_loops = 0
     while running:
-        num_loops += 1
-        board.drawBoard(gameDisplay)
-        board.drawAllBubbles(gameDisplay)
-        board.addToBoard(gameDisplay)
+        board.drawBoard()
+        board.drawAllBubbles()
+        board.addToBoard()
         for event in pygame.event.get():
             # this section handles the erasing of a popup after 5000 ticks
             if POPUP_COUNTER >= 0:
@@ -105,7 +103,7 @@ def game_loop():
             board.shooting.pop(0)
             if board.shooting == []:
                 # load in new bubble
-                board.popMatches(gameDisplay)
+                board.popMatches()
                 board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                             board.future_bubbles[0][0], board.future_bubbles[0][1])
             #TODO: make it so when shot, the match doesn't erase first, then again later

@@ -43,15 +43,7 @@ def init(grade_level, mode):
         key = d.keys()[i]
         val = d[key]
         WORDS[key] = val
-    print(WORDS)
-
-# def dict_factory(cursor, row):
-#     d = {}
-#     print(cursor.fetchall())
-#     for idx, col in enumerate(cursor.fetchall()):
-#         if col
-#         d[col[idx]] = row[idx]
-#     return d
+    #print(WORDS)
 
 # Global values for the display size
 # (we will always multiply these so that we can scale the resolution)

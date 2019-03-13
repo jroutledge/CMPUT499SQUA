@@ -18,20 +18,20 @@ def calcBoard(board):
     return board_len
 
 
-def createPopup(words, colour, pos_x, pos_y, gameDisplay):
-    POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
-    message = POPUP_FONT.render(words, False, colour)
-    gameDisplay.blit(message, (pos_x, pos_y))
+# def createPopup(words, colour, pos_x, pos_y, gameDisplay):
+#     POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
+#     message = POPUP_FONT.render(words, False, colour)
+#     gameDisplay.blit(message, (pos_x, pos_y))
 
 
-def erase_popup(message, pos_x, pos_y, gameDisplay):
-    POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
-    message = POPUP_FONT.render(message, False, WHITE)
-    gameDisplay.blit(message, (pos_x, pos_y))
+# def erase_popup(message, pos_x, pos_y, gameDisplay):
+#     POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
+#     message = POPUP_FONT.render(message, False, WHITE)
+#     gameDisplay.blit(message, (pos_x, pos_y))
 
 
 class Board:
-    def __init__(self):
+    def __init__(self,  gameDisplay):
         self.top = int(DISPLAY_Y * 0.1)
         self.left = int(DISPLAY_X * 0.12)
         self.width = int(DISPLAY_X * 0.76)
@@ -51,13 +51,14 @@ class Board:
         self.current_matches = []
         self.current_popups = []
         self.help_box = None    # rect object on the board
+        self.gameDisplay = gameDisplay
 
-    def shootBubble(self, dest_pos, gameDisplay):
+    def shootBubble(self, dest_pos):
         """ this will shoot a bubble from its current location to the position specified """
         hit_array = []
         bubble = self.shoot_bubble
 
-        self.shooting = self.shoot_bubble.move(dest_pos, gameDisplay)
+        self.shooting = self.shoot_bubble.move(dest_pos, self.gameDisplay)
 
         # remove from future bubbles
         self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
@@ -74,8 +75,6 @@ class Board:
 
         # detect matches and pop as needed
         self.findMatches()
-
-        # self.shoot_bubble.draw(BLACK)
 
         return hit_array
 
@@ -100,39 +99,39 @@ class Board:
         self.current_matches = matches
         return
         
-    def popMatches(self, gameDisplay):
+    def popMatches(self):
         bubble = self.shoot_bubble
         matches = self.current_matches
         if matches != [bubble]:
             # erase the matches
             for b in matches:
-                b.erase(gameDisplay)
+                b.erase(self.gameDisplay)
                 index = self.board_bubbles.index(b)
                 self.board_bubbles.pop(index)
                 b.colour = WHITE
-            bubble.erase(gameDisplay)
+            bubble.erase(self.gameDisplay)
 
             # send good job message
             print("You popped bubbles!")
             self.success_popped = True
         return
 
-    def drawBoard(self, gameDisplay):
+    def drawBoard(self):
         # draw board outline
-        self.board = pygame.draw.rect(gameDisplay, BLACK, \
+        self.board = pygame.draw.rect(self.gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
 
         # draw help box
-        self.help_box = pygame.draw.rect(gameDisplay, BLACK, (0, 0, 100, 40), 2)
+        self.help_box = pygame.draw.rect(self.gameDisplay, BLACK, (0, 0, 100, 40), 2)
         meme_font = pygame.font.SysFont('Comic Sans MS', 25)
         help_meme = meme_font.render('HELP', False, BLACK)
-        gameDisplay.blit(help_meme, (20, 5))
+        self.gameDisplay.blit(help_meme, (20, 5))
 
-    def drawAllBubbles(self, gameDisplay):
-        self.shoot_bubble.draw(gameDisplay)
+    def drawAllBubbles(self):
+        self.shoot_bubble.draw(self.gameDisplay)
         for bubble in self.board_bubbles:
             if (bubble != 0):
-                bubble.draw(gameDisplay)
+                bubble.draw(self.gameDisplay)
 
     def createWordList(self):
         """ this will populate the game board with words """
@@ -149,6 +148,7 @@ class Board:
         # loop through the list and create the bubbles
         bubbleList = self.createBubbles(word_colour_list)
         self.board_bubbles = bubbleList
+        print(bubbleList)
 
     def createBubbles(self, word_colour_list):
         row_num = 0
@@ -176,7 +176,7 @@ class Board:
             self.board_positions[i] = [bubbleLeft, bubbleTop]
         return bubbleList
 
-    def addToBoard(self, gameDisplay):
+    def addToBoard(self):
         global POPUP_COUNTER, POPUP
         """
         funtion to add stuff around the main board space
@@ -190,23 +190,23 @@ class Board:
         right_meme_pt2 = meme_font.render('where you want', False, BLACK)
         right_meme_pt3 = meme_font.render('the bubble to go', False, BLACK)
         # gameDisplay.blit(left_meme, (int(DISPLAY_X * 0.05), int(DISPLAY_Y * 0.1)))
-        gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.02)))
-        gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.04)))
-        gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.06)))
+        self.gameDisplay.blit(right_meme, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.02)))
+        self.gameDisplay.blit(right_meme_pt2, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.04)))
+        self.gameDisplay.blit(right_meme_pt3, (int(DISPLAY_X * 0.76), int(DISPLAY_Y * 0.06)))
         if self.won:
             # create the success popup
-            success_poppup = Popup('You Won! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), gameDisplay, BLUE)
+            success_poppup = Popup('You Won! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), self.gameDisplay, BLUE)
             self.current_popups.append(success_poppup)
             success_poppup.create()
             # store the popup for deletion later
             # POPUP = ['Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
             # create second success popu TODO: this is a meme, remove it
-            success_poppup2 = Popup('Winner, winner, chicken dinner', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4), gameDisplay, BLUE)
+            success_poppup2 = Popup('Winner, winner, chicken dinner', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4), self.gameDisplay, BLUE)
             self.current_popups.append(success_poppup2)
             success_poppup.create()
         elif self.success_popped:
             # create the success popup
-            popped_bubble = Popup('Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), gameDisplay, BLUE)
+            popped_bubble = Popup('Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), self.gameDisplay, BLUE)
             self.current_popups.append(popped_bubble)
             popped_bubble.create()
             # start the counter
@@ -215,7 +215,7 @@ class Board:
             #POPUP = ['Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
         elif self.game_over:
             # create the game over popup
-            lost_popup = Popup('Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4), gameDisplay, RED)
+            lost_popup = Popup('Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4), self.gameDisplay, RED)
             self.current_popups.append(lost_popup)
             lost_popup.create()
             # start the counter
