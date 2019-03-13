@@ -72,8 +72,6 @@ class Board:
         # detect matches and pop as needed
         self.findMatches()
 
-        # self.shoot_bubble.draw(BLACK)
-
         return hit_array
 
 
@@ -143,6 +141,7 @@ class Board:
         # loop through the list and create the bubbles
         bubbleList = self.createBubbles(word_colour_list)
         self.board_bubbles = bubbleList
+        print(bubbleList)
 
 
     def createBubbles(self, word_colour_list):

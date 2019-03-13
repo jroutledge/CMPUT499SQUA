@@ -52,9 +52,7 @@ def game_loop():
     board.createWordList()
     board.drawBoard(gameDisplay)
 
-    num_loops = 0
     while running:
-        num_loops += 1
         board.drawBoard(gameDisplay)
         board.drawAllBubbles(gameDisplay)
         board.addToBoard(gameDisplay)
