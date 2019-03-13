@@ -17,6 +17,8 @@
 * https://stackoverflow.com/questions/1296501/find-path-to-currently-running-file
 * https://code-maven.com/listing-a-directory-using-python 
 * https://stackoverflow.com/questions/123198/how-do-i-copy-a-file-in-python
+* https://stackoverflow.com/questions/19775636/pygame-pause-key
+* https://stackoverflow.com/questions/42014195/rendering-text-with-multiple-lines-in-pygame
 
 ## Research Resources ##
 
