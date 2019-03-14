@@ -76,6 +76,23 @@ class Board:
         # detect matches and pop as needed
         self.findMatches()
 
+        # move the bubble
+        while self.shooting != []:
+            bubble.erase(self.gameDisplay)
+            bubble.pos = self.shooting[0]
+            bubble.drawAsGrey(self.gameDisplay)
+            pygame.display.update()
+            # pygame.time.wait(1)
+            self.shooting.pop(0)
+
+            # TODO: make it so when shot, the match doesn't erase first, then again later
+
+        if self.shooting == []:
+            # load in new bubble
+            self.popMatches()
+            self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+                                       self.future_bubbles[0][0], self.future_bubbles[0][1])
+
         return hit_array
 
     def findMatches(self): #TODO: this function is bloated and is leading to problems in animating the shooting
@@ -116,7 +133,9 @@ class Board:
             self.success_popped = True
         return
 
-    def drawBoard(self):
+    def drawBoard(self, ):
+        # draw white board
+        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
         # draw board outline
         self.board = pygame.draw.rect(self.gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
@@ -128,7 +147,7 @@ class Board:
         self.gameDisplay.blit(help_meme, (20, 5))
 
     def drawAllBubbles(self):
-        self.shoot_bubble.draw(self.gameDisplay)
+        self.shoot_bubble.drawAsGrey(self.gameDisplay)
         for bubble in self.board_bubbles:
             if (bubble != 0):
                 bubble.draw(self.gameDisplay)
@@ -223,3 +242,22 @@ class Board:
             # store the popup for deletion later
             #POPUP = ['Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4)]
 
+    def displayHelpBox(self):
+        """ displays the help box for the user """
+        meme_font = pygame.font.SysFont('Comic Sans MS', 30)
+        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
+        pygame.draw.rect(self.gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
+        for i, l in enumerate(HELP_MSG):
+            self.gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 32 * i))
+            # meme_font.render(l, False, BLACK)
+        pygame.display.update()
+
+        # pause until user presses a button
+        paused = True
+        while paused:
+            for ev in pygame.event.get():
+                if ev.type == pygame.KEYDOWN:
+                    paused = False
+                    self.drawBoard()
+                    self.drawAllBubbles()
+                    self.addToBoard()

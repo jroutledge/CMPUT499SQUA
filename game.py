@@ -69,36 +69,31 @@ def game_loop():
             if board.future_bubbles == []:
                 board.game_over = True
                 board.future_bubbles = [(" ", WHITE)] #TODO: fix this kludge
-                print("You lost!")
+                print("Game over, better luck next time :(")
 
             if board.board_bubbles == []:
                 # print a win message to the screen
                 board.won = True
-                print("You won!")
+                print("You won! Good job! :)")
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
                 if board.board.collidepoint(pos):
-                    # valid selection for buble, shoot it
-                    board.shootBubble(pos, )
-                elif board.help_box.collidepoint(pos):
-                    # make help popup
-                    meme_font = pygame.font.SysFont('Comic Sans MS', 25)
-                    pygame.draw.rect(gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
-                    pygame.draw.rect(gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
-                    for i, l in enumerate(HELP_MSG):
-                        gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 25*i))
-                        # meme_font.render(l, False, BLACK)
-                    pygame.display.update()
+                    # valid selection for bubble, shoot it
+                    board.shootBubble(pos)
 
+                elif board.help_box.collidepoint(pos):
+                    # make help box appear
+                    board.displayHelpBox()
 
                 else:
-                    #TODO: display an error
+                    # TODO: display an error
                     pass
 
             if event.type == pygame.QUIT:
                 running = False
 
+<<<<<<< HEAD
         if(board.shooting != []):
             board.shoot_bubble.erase(gameDisplay)
             board.shoot_bubble.pos = board.shooting[0]
@@ -112,6 +107,8 @@ def game_loop():
                             board.future_bubbles[0][0], board.future_bubbles[0][1])
             #TODO: make it so when shot, the match doesn't erase first, then again later
 
+=======
+>>>>>>> refs/remotes/origin/master
         pygame.display.update()
         clock.tick(60)
 

@@ -66,6 +66,7 @@ YELLOW = (255, 255 ,0)
 PURPLE = (255, 0, 255)
 TURQUOISE = (0, 255, 255)
 WHITE = (255, 255, 255)
+GREY = (169, 169, 169)
 LIGHT_BLUE = (0, 100, 255)
 TEXT_COLOUR = (0, 0, 0)
 BACKGROUND_COLOUR = (255, 255, 255)
@@ -83,22 +84,22 @@ WORD_COLOURS = [RED, GREEN, BLUE, YELLOW, PURPLE, TURQUOISE] #TODO: add colours 
 NUM_WORDS = len(WORD_COLOURS)
 
 # Globals for helpp message
-HELP_MSG = ["Game Instructions and Help: ",
+HELP_MSG = ["Game Instructions and Help: ", "",
             "To play game, try and match the words according to ",
             "their meanings. If playing on synonym mode, this ",
             "means matching words like 'big' and 'huge' together.",
-            " If playing on antonym mode, this means matching ",
+            "If playing on antonym mode, this means matching ",
             "words like 'big' and 'small' together. Shoot the ",
-            "bubble at the word you think it matches, if it's ",
-            "a match it will pop. Otherwise it willstay. If you ",
-            "pop all the bubbles you win! ",
-            "To exit this menu, press any key."]
+            "bubble at the word you think it matches. You can do ",
+            "this by clicking where you want the bubble to go on ",
+            "the board. If it's a match it will pop, otherwise it ",
+            "will stay. If you pop all the bubbles you win! ",
+            "Note, the bubble you're shooting will show up as grey.",
+            "It is your job to figure out which words match the ",
+            "bubble you're shooting. All the other words are are ",
+            "grouped by color.",
+            "", "To exit this menu, press any key."]
 HELP_X = int(DISPLAY_X * 0.12)
 HELP_Y = int(DISPLAY_Y * 0.1)
 HELP_WIDTH = int(DISPLAY_X * 0.76)
 HELP_HEIGHT = int(DISPLAY_Y * 0.8)
-
-# font
-# from pygame.font import SysFont
-# meme_font = pygame.font.SysFont('Comic Sans MS', 25)
-
