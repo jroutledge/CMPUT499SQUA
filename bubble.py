@@ -8,7 +8,7 @@ def collide(pos1, pos2):
     x = pos1[0] - pos2[0]
     y = pos1[1] - pos2[1]
     dist = math.hypot(x, y)
-    if dist <= 2.5*BUBBLE_RADIUS:
+    if dist <= 2.1*BUBBLE_RADIUS:
         # collision
         return True
     else:
