@@ -94,6 +94,22 @@ def game_loop():
             if event.type == pygame.QUIT:
                 running = False
 
+<<<<<<< HEAD
+        if(board.shooting != []):
+            board.shoot_bubble.erase(gameDisplay)
+            board.shoot_bubble.pos = board.shooting[0]
+            board.shoot_bubble.draw(gameDisplay)
+            pygame.time.wait(1)
+            board.shooting.pop(0)
+            if board.shooting == []:
+                # load in new bubble
+                board.popMatches()
+                board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+                            board.future_bubbles[0][0], board.future_bubbles[0][1])
+            #TODO: make it so when shot, the match doesn't erase first, then again later
+
+=======
+>>>>>>> refs/remotes/origin/master
         pygame.display.update()
         clock.tick(60)
 
