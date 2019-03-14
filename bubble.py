@@ -56,7 +56,7 @@ class Bubble:
         y2 = target_position[1]
         difX = x2 - x1
         difY = y2 - y1
-        print(difX, difY)
+        #print(difX, difY)
         dist = math.sqrt((x2-x1)**2 + (y2-y1)**2)
         num_positions = int(dist / 10)
         intermediate_positions = [(0,0)] * num_positions

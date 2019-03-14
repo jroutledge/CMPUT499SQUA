@@ -79,22 +79,16 @@ class Board:
         # move the bubble
         while self.shooting != []:
             bubble.erase(self.gameDisplay)
-            pygame.display.update()
-            pygame.time.wait(10)
+            #pygame.display.update()
             bubble.pos = self.shooting[0]
             bubble.drawAsGrey(self.gameDisplay)
+            pygame.time.wait(15)
             pygame.display.update()
-<<<<<<< HEAD
-=======
-            pygame.time.wait(2)
->>>>>>> refs/remotes/origin/master
             self.shooting.pop(0)
 
             # TODO: make it so when shot, the match doesn't erase first, then again later
 
-        print(self.current_matches)
-
-        if self.shooting == []:
+        if self.shooting == [] and self.future_bubbles != []:
             # load in new bubble
             self.popMatches()
             self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
@@ -105,7 +99,6 @@ class Board:
     def findMatches(self): # TODO: this function is bloated and is leading to problems in animating the shooting
         """
         finds matches that the bubble has made
-        'pops' the matches and then displays a good job message
         """
         bubble = self.shoot_bubble
         matches = [bubble]
@@ -124,6 +117,9 @@ class Board:
         return
         
     def popMatches(self):
+        '''
+        'pops' the matches and then displays a good job message
+        '''
         bubble = self.shoot_bubble
         matches = self.current_matches
         if matches != [bubble]:
@@ -174,7 +170,7 @@ class Board:
         # loop through the list and create the bubbles
         bubbleList = self.createBubbles(word_colour_list)
         self.board_bubbles = bubbleList
-        print(bubbleList)
+        #print(bubbleList)
 
     def createBubbles(self, word_colour_list):
         row_num = 0

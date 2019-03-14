@@ -10,7 +10,7 @@ def init(grade_level, mode):
     path, f = os.path.split(os.path.abspath(__file__))
     conn = sqlite3.connect(path + '/words.db')
 
-    print(path)
+    #print(path)
 
     d = {}
     #TODO: error handle incorrect args

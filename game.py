@@ -53,6 +53,8 @@ def game_loop():
     board.drawBoard()
 
     while running:
+        if board.future_bubbles == []:
+            break
         board.drawBoard()
         board.drawAllBubbles()
         board.addToBoard()
@@ -105,7 +107,6 @@ def main():
     parser.add_argument('mode', help="synonym or antonym mode")
     args = parser.parse_args()
     init(args.grade_level, args.mode)
-    #time.sleep(2)
     game_loop()
 
 if __name__ == '__main__':
