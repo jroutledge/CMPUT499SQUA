@@ -103,7 +103,7 @@ def game_loop():
             board.shoot_bubble.erase(gameDisplay)
             board.shoot_bubble.pos = board.shooting[0]
             board.shoot_bubble.draw(gameDisplay)
-            pygame.time.wait(2)
+            pygame.time.wait(1)
             board.shooting.pop(0)
             if board.shooting == []:
                 # load in new bubble
