@@ -82,10 +82,12 @@ class Board:
             bubble.pos = self.shooting[0]
             bubble.drawAsGrey(self.gameDisplay)
             pygame.display.update()
-            # pygame.time.wait(1)
+            pygame.time.wait(2)
             self.shooting.pop(0)
 
             # TODO: make it so when shot, the match doesn't erase first, then again later
+
+        print(self.current_matches)
 
         if self.shooting == []:
             # load in new bubble
@@ -95,7 +97,7 @@ class Board:
 
         return hit_array
 
-    def findMatches(self): #TODO: this function is bloated and is leading to problems in animating the shooting
+    def findMatches(self): # TODO: this function is bloated and is leading to problems in animating the shooting
         """
         finds matches that the bubble has made
         'pops' the matches and then displays a good job message
@@ -108,7 +110,7 @@ class Board:
             for onBoard in self.board_bubbles:
                 if (self.board_bubbles == 0):
                     pass
-                if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour: #TODO: we should NOT be comparing on colour
+                if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour: # TODO: we should NOT be comparing on colour
                     # it's matching and touching
                     if onBoard not in matches:
                         matches.append(onBoard)

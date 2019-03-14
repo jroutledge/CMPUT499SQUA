@@ -78,6 +78,7 @@ def game_loop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
+
                 if board.board.collidepoint(pos):
                     # valid selection for bubble, shoot it
                     board.shootBubble(pos)
