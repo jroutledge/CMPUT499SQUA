@@ -79,10 +79,11 @@ class Board:
         # move the bubble
         while self.shooting != []:
             bubble.erase(self.gameDisplay)
+            pygame.display.update()
+            pygame.time.wait(10)
             bubble.pos = self.shooting[0]
             bubble.drawAsGrey(self.gameDisplay)
             pygame.display.update()
-            # pygame.time.wait(1)
             self.shooting.pop(0)
 
             # TODO: make it so when shot, the match doesn't erase first, then again later
