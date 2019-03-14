@@ -80,8 +80,7 @@ class Board:
         while self.shooting != []:
             bubble.erase(self.gameDisplay)
             bubble.pos = self.shooting[0]
-            bubble.draw(self.gameDisplay)
-            # self.drawAllBubbles()
+            bubble.drawAsGrey(self.gameDisplay)
             pygame.display.update()
             # pygame.time.wait(1)
             self.shooting.pop(0)
@@ -148,7 +147,7 @@ class Board:
         self.gameDisplay.blit(help_meme, (20, 5))
 
     def drawAllBubbles(self):
-        self.shoot_bubble.draw(self.gameDisplay)
+        self.shoot_bubble.drawAsGrey(self.gameDisplay)
         for bubble in self.board_bubbles:
             if (bubble != 0):
                 bubble.draw(self.gameDisplay)

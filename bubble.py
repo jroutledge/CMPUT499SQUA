@@ -85,3 +85,8 @@ class Bubble:
         drawBubble(self.pos, WHITE, gameDisplay)
         writeToBubble(self.word, self.pos, WHITE, gameDisplay)
         return
+
+    def drawAsGrey(self, gameDisplay):
+        drawBubble(self.pos, GREY, gameDisplay)
+        writeToBubble(self.word, self.pos, BLACK, gameDisplay)
+        return

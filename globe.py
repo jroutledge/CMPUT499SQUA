@@ -66,6 +66,7 @@ YELLOW = (255, 255 ,0)
 PURPLE = (255, 0, 255)
 TURQUOISE = (0, 255, 255)
 WHITE = (255, 255, 255)
+GREY = (169, 169, 169)
 LIGHT_BLUE = (0, 100, 255)
 TEXT_COLOUR = (0, 0, 0)
 BACKGROUND_COLOUR = (255, 255, 255)
@@ -93,6 +94,10 @@ HELP_MSG = ["Game Instructions and Help: ", "",
             "this by clicking where you want the bubble to go on ",
             "the board. If it's a match it will pop, otherwise it ",
             "will stay. If you pop all the bubbles you win! ",
+            "Note, the bubble you're shooting will show up as grey.",
+            "It is your job to figure out which words match the ",
+            "bubble you're shooting. All the other words are are ",
+            "grouped by color.",
             "", "To exit this menu, press any key."]
 HELP_X = int(DISPLAY_X * 0.12)
 HELP_Y = int(DISPLAY_Y * 0.1)
