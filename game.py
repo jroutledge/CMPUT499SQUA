@@ -112,6 +112,7 @@ def game_loop():
             board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
                                        board.future_bubbles[0][0], board.future_bubbles[0][1])
             board.shooting = False
+            board.drawAllBubbles()
         elif board.future_bubbles == []:
             board.won = True
             print("You won! Good job! :)")
@@ -124,7 +125,7 @@ def game_loop():
 
 def main():
     parser = argparse.ArgumentParser(description='Play the game')
-    parser.add_argument('grade_level', help="the grade level of the words")
+    parser.add_argument('grade_level', help="the grade level of the words, a number between 1 and 8")
     parser.add_argument('mode', help="synonym or antonym mode")
     args = parser.parse_args()
     init(args.grade_level, args.mode)
