@@ -1,3 +1,5 @@
+import sys
+
 WORDS = {}
 # Global values from our database
 def init(grade_level, mode):
@@ -13,14 +15,21 @@ def init(grade_level, mode):
     #print(path)
 
     d = {}
-    #TODO: error handle incorrect args
-    if mode.lower() == 'synonym':
+    # check the mode
+    if mode.lower() == 'synonym' or mode.lower() == 'synonyms' or mode.lower() == 's':
         table2 = 'SynWords'
-    elif mode.lower() == 'antonym':
+    elif mode.lower() == 'antonym' or mode.lower() == 'antonyms' or mode.lower() == 'a':
         table2 = 'AntWords'
     else:
-        table2 = 'error'
-    #conn.row_factory = dict_factory
+        print("Invalid mode argument. Exiting...")
+        sys.exit()
+
+    # check the grade level
+    if int(grade_level) < 1 or int(grade_level) > 8:
+        print("Invalid grade level argumennt. Exiting...")
+        sys.exit()
+
+    # conn.row_factory = dict_factory
     c = conn.cursor()
     c.execute('SELECT w.word, s.syn \
                FROM StartWords w, {0} s \
