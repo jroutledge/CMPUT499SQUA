@@ -51,13 +51,16 @@ def game_loop():
     board = Board(gameDisplay)
     board.createWordList()
     board.drawBoard()
+    board.drawAllBubbles()
+    board.addToBoard()
 
     while running:
         if board.future_bubbles == []:
             break
-        board.drawBoard()
-        board.drawAllBubbles()
-        board.addToBoard()
+        # board.drawBoard()
+        # board.drawAllBubbles()
+        # board.addToBoard()
+        board.drawShootBubble()
         for event in pygame.event.get():
             # this section handles the erasing of a popup after 5000 ticks
             if POPUP_COUNTER >= 0:
@@ -82,6 +85,7 @@ def game_loop():
                 pos = getPos()
 
                 if board.board.collidepoint(pos):
+                    board.shooting = True
                     # valid selection for bubble, shoot it
                     board.shootBubble(pos)
 
@@ -95,6 +99,23 @@ def game_loop():
 
             if event.type == pygame.QUIT:
                 running = False
+            
+        if board.shooting and board.shoot_pos != []:
+            board.shoot_bubble.erase(gameDisplay)
+            #pygame.display.update()
+            board.shoot_bubble.pos = board.shoot_pos[0]
+            board.shoot_bubble.drawAsGrey(gameDisplay)
+            board.shoot_pos.pop(0)
+        elif board.shooting and board.shoot_pos == [] and board.future_bubbles != []:
+            # load in new bubble
+            board.popMatches()
+            board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+                                       board.future_bubbles[0][0], board.future_bubbles[0][1])
+            board.shooting = False
+        elif board.future_bubbles == []:
+            board.won = True
+            print("You won! Good job! :)")
+
 
         pygame.display.update()
         clock.tick(60)

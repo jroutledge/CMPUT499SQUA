@@ -47,7 +47,8 @@ class Board:
         self.success_popped = False
         self.won = False
         self.game_over = False
-        self.shooting = []
+        self.shooting = False
+        self.shoot_pos = []
         self.current_matches = []
         self.current_popups = []
         self.help_box = None    # rect object on the board
@@ -58,7 +59,7 @@ class Board:
         hit_array = []
         bubble = self.shoot_bubble
 
-        self.shooting = self.shoot_bubble.move(dest_pos, self.gameDisplay)
+        self.shoot_pos = self.shoot_bubble.move(dest_pos, self.gameDisplay)
 
         # remove from future bubbles
         self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
@@ -76,23 +77,21 @@ class Board:
         # detect matches and pop as needed
         self.findMatches()
 
-        # move the bubble
-        while self.shooting != []:
-            bubble.erase(self.gameDisplay)
-            #pygame.display.update()
-            bubble.pos = self.shooting[0]
-            bubble.drawAsGrey(self.gameDisplay)
-            pygame.time.wait(15)
-            pygame.display.update()
-            self.shooting.pop(0)
+        # # move the bubble
+        # while self.shooting != []:
+        #     bubble.erase(self.gameDisplay)
+        #     #pygame.display.update()
+        #     bubble.pos = self.shooting[0]
+        #     bubble.drawAsGrey(self.gameDisplay)
+        #     self.shooting.pop(0)
 
             # TODO: make it so when shot, the match doesn't erase first, then again later
 
-        if self.shooting == [] and self.future_bubbles != []:
-            # load in new bubble
-            self.popMatches()
-            self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
-                                       self.future_bubbles[0][0], self.future_bubbles[0][1])
+        # if self.shooting == [] and self.future_bubbles != []:
+        #     # load in new bubble
+        #     self.popMatches()
+        #     self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+        #                                self.future_bubbles[0][0], self.future_bubbles[0][1])
 
         return hit_array
 
@@ -121,6 +120,8 @@ class Board:
         'pops' the matches and then displays a good job message
         '''
         bubble = self.shoot_bubble
+        bubble.erase(self.gameDisplay)
+        bubble.draw(self.gameDisplay)
         matches = self.current_matches
         if matches != [bubble]:
             # erase the matches
@@ -136,7 +137,7 @@ class Board:
             self.success_popped = True
         return
 
-    def drawBoard(self, ):
+    def drawBoard(self):
         # draw white board
         pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
         # draw board outline
@@ -150,10 +151,13 @@ class Board:
         self.gameDisplay.blit(help_meme, (20, 5))
 
     def drawAllBubbles(self):
-        self.shoot_bubble.drawAsGrey(self.gameDisplay)
+        self.drawShootBubble()
         for bubble in self.board_bubbles:
             if (bubble != 0):
                 bubble.draw(self.gameDisplay)
+
+    def drawShootBubble(self):
+        self.shoot_bubble.drawAsGrey(self.gameDisplay)
 
     def createWordList(self):
         """ this will populate the game board with words """
