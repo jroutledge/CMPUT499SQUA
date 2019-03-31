@@ -14,20 +14,9 @@ def calcBoard(board):
     board_len = 0
     bubbleAreaWidth = board.width
     num_bubbles = int(math.floor(bubbleAreaWidth/(BUBBLE_RADIUS * 2)))
-    board_len = (num_bubbles * 3) - 1 # middle row has 1 less
-    return board_len
-
-
-# def createPopup(words, colour, pos_x, pos_y, gameDisplay):
-#     POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
-#     message = POPUP_FONT.render(words, False, colour)
-#     gameDisplay.blit(message, (pos_x, pos_y))
-
-
-# def erase_popup(message, pos_x, pos_y, gameDisplay):
-#     POPUP_FONT = pygame.font.SysFont('Comic Sans MS', 30)
-#     message = POPUP_FONT.render(message, False, WHITE)
-#     gameDisplay.blit(message, (pos_x, pos_y))
+    bubbles_len = (num_bubbles * 3) - 1 # middle row has 1 less
+    board_len = (num_bubbles * 4) - 2 # middle and last row have 1 less
+    return bubbles_len, board_len
 
 
 class Board:
@@ -37,7 +26,8 @@ class Board:
         self.width = int(DISPLAY_X * 0.76)
         self.height = int(DISPLAY_Y * 0.8)
         self.future_bubbles = []
-        self.board_len = calcBoard(self)
+        self.bubbles_len = calcBoard(self)[0]
+        self.board_len = calcBoard(self)[1]
         self.board_bubbles = [0] * self.board_len       # list of bubbles on the board
         self.board_positions = [0] * self.board_len     # list if coords for centers of bubble
         self.createWordList()
@@ -54,44 +44,40 @@ class Board:
         self.help_box = None    # rect object on the board
         self.gameDisplay = gameDisplay
 
+    def nearest(self, pos):
+        #calculate the shots closest neighbor
+        board_cpy = [x for x in self.board_positions] # [x for x in self.board_positions if x is not 0]
+        for i in range(0, len(board_cpy)):
+            if self.board_bubbles[i] != 0: #TODO: maybe calling the popped bubbles 0 is sloppy
+                #remake that position super far away so we never match it
+                board_cpy[i] = [-1, -1]
+        #print(len(self.board_bubbles), len(self.board_positions), len(board_cpy))
+        #print(self.board_bubbles)
+        #print(self.board_positions,board_cpy)
+        kdtree = KDTree(board_cpy)
+        dist, indices = kdtree.query(pos)
+        indice = self.board_positions.index(board_cpy[indices])
+
+        return dist, indice
+
     def shootBubble(self, dest_pos):
         """ this will shoot a bubble from its current location to the position specified """
         hit_array = []
         bubble = self.shoot_bubble
 
-        self.shoot_pos = self.shoot_bubble.move(dest_pos, self.gameDisplay)
+        dist, i = self.nearest(dest_pos)
+        snapped_dest = self.board_positions[i]
+        self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
 
         # remove from future bubbles
         self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
 
-        #calculate the shots closest neighbor
-        board_cpy = [x for x in self.board_positions if x is not 0]
-        pos_cpy = [dest_pos[0], dest_pos[1]]
-        kdtree = KDTree(board_cpy)
-        dist, indices = kdtree.query(dest_pos)
-
         # add shot bubble to board
-        self.board_bubbles.insert(indices, bubble)
-        self.shoot_bubble.pos = self.board_positions[indices]
+        self.board_bubbles[i] = bubble
+        self.shoot_bubble.pos = self.board_positions[i]
 
         # detect matches and pop as needed
         self.findMatches()
-
-        # # move the bubble
-        # while self.shooting != []:
-        #     bubble.erase(self.gameDisplay)
-        #     #pygame.display.update()
-        #     bubble.pos = self.shooting[0]
-        #     bubble.drawAsGrey(self.gameDisplay)
-        #     self.shooting.pop(0)
-
-            # TODO: make it so when shot, the match doesn't erase first, then again later
-
-        # if self.shooting == [] and self.future_bubbles != []:
-        #     # load in new bubble
-        #     self.popMatches()
-        #     self.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
-        #                                self.future_bubbles[0][0], self.future_bubbles[0][1])
 
         return hit_array
 
@@ -107,7 +93,10 @@ class Board:
             for onBoard in self.board_bubbles:
                 if (self.board_bubbles == 0):
                     pass
-                if collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour: # TODO: we should NOT be comparing on colour
+                #TODO: this fix is hacky, and we shouldn't make empty bubbles zeros probably
+                if onBoard != 0 and \
+                    collide(b.pos, onBoard.pos) and bubble.colour == onBoard.colour:
+                    # TODO: we should NOT be comparing on colour
                     # it's matching and touching
                     if onBoard not in matches:
                         matches.append(onBoard)
@@ -128,8 +117,8 @@ class Board:
             for b in matches:
                 b.erase(self.gameDisplay)
                 index = self.board_bubbles.index(b)
-                self.board_bubbles.pop(index)
-                b.colour = WHITE
+                self.board_bubbles[index] = 0
+                #b.colour = WHITE
             bubble.erase(self.gameDisplay)
 
             # send good job message
@@ -152,7 +141,8 @@ class Board:
 
     def drawAllBubbles(self):
         self.drawShootBubble()
-        for bubble in self.board_bubbles:
+        for bubble, position in zip(self.board_bubbles, self.board_positions):
+            #print(self.board_positions)
             if (bubble != 0):
                 bubble.draw(self.gameDisplay)
 
@@ -174,7 +164,8 @@ class Board:
         # loop through the list and create the bubbles
         bubbleList = self.createBubbles(word_colour_list)
         self.board_bubbles = bubbleList
-        #print(bubbleList)
+        # for i in range(0, self.board_len - self.bubbles_len):
+        #     self.board_bubbles.append(0)
 
     def createBubbles(self, word_colour_list):
         row_num = 0
@@ -183,11 +174,14 @@ class Board:
         bubbleAreaWidth = self.width
         bubbleList = []
         for i in range(0, len(self.board_positions)):
-            if i < len(word_colour_list):
+            if i < self.bubbles_len and i < len(word_colour_list):
                 word_colour_pair = word_colour_list[i]
                 currentBubble = Bubble(bubbleLeft, bubbleTop, \
                                 word_colour_pair[0], word_colour_pair[1])
                 bubbleList.append(currentBubble)
+            else:
+                bubbleList.append(0)
+            self.board_positions[i] = [bubbleLeft, bubbleTop]
             # add radius to positions since circles draw from the middle
             bubbleLeft += (BUBBLE_RADIUS * 2)
             # if out of space for bubbles, start a new row
@@ -199,7 +193,7 @@ class Board:
                     bubbleLeft += BUBBLE_RADIUS # offset every other row
                     bubbleTop -= int(BUBBLE_RADIUS/3.5) # reduce the height so they go between the bubbles
                     #TODO: math the above line, is it a third?? a quarter?? somewhere in between??
-            self.board_positions[i] = [bubbleLeft, bubbleTop]
+        print(self.board_positions)
         return bubbleList
 
     def addToBoard(self):
