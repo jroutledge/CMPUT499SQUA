@@ -66,12 +66,15 @@ class Processor:
                 continue
             else:
 
-                syns = w.synonyms()
+                # There are 3 relevance levels you can use, 1 will give the set with the most words
+                # and possibly some irrelevant words. Here we use 3 to make sure everything stays on topic.
+                syns = w.synonyms(relevance=3)
+
                 if syns:
                     for s in syns:
                         self.outputFiles[1].write(word + " " + s + "\n")
 
-                ants = w.antonyms()
+                ants = w.antonyms(relevance=3)
                 if ants:
                     for a in ants:
                         self.outputFiles[2].write(word + " " + a + "\n")
