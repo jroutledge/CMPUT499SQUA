@@ -15,9 +15,17 @@ def calcBoard(board):
     bubbleAreaWidth = board.width
     num_bubbles = int(math.floor(bubbleAreaWidth/(BUBBLE_RADIUS * 2)))
     bubbles_len = (num_bubbles * 3) - 1 # middle row has 1 less
-    board_len = (num_bubbles * 4) - 2 # middle and last row have 1 less
+    board_len = (num_bubbles * 5) - 2 # middle and last row have 1 less
     return bubbles_len, board_len
 
+row1 = range(0,4)
+row2 = range(5,8)
+row3 = range(9,13)
+row4 = range(14,17)
+row5 = range(18, 22)
+middle = [11, 20]
+right = []
+edges = [0, 4, 5, 8, 9, 13, 14, 17, 18, 22]
 
 class Board:
     def __init__(self,  gameDisplay):
@@ -52,20 +60,86 @@ class Board:
                 #remake that position super far away so we never match it
                 board_cpy[i] = [-1, -1]
         #print(len(self.board_bubbles), len(self.board_positions), len(board_cpy))
-        #print(self.board_bubbles)
-        #print(self.board_positions,board_cpy)
         kdtree = KDTree(board_cpy)
         dist, indices = kdtree.query(pos)
         indice = self.board_positions.index(board_cpy[indices])
 
         return dist, indice
 
+    def determineDirection(self, dest_pos):
+        pos1 = self.shoot_bubble.pos
+        pos2 = dest_pos
+        dif = pos1[0] - pos2[0]
+        if dif == 0:
+            self.shoot_bubble.direction = "up"
+        elif dif < 0:
+            self.shoot_bubble.direction = "left"
+        elif dif > 0:
+            self.shoot_bubble.direction = "right"
+        return
+
+    def checkBelow(self, index):
+        direction = self.shoot_bubble.direction
+        if self.board_bubbles[index] == 0:
+            return index
+        if direction == "right":
+            i = index + 4
+        elif direction =="left" or direction == "up":
+            i = index + 4
+        if index not in row5 and self.board_bubbles[i] == 0:
+            return i
+        if index in row5:
+            return index - 1 #TODO: make this an whole error
+        elif index in row4:
+            self.checkBelow(i)
+            return i
+        elif index in row3:
+            self.checkBelow(i)
+            return i
+        elif index in row2:
+            self.checkBelow(i)
+            return i
+        elif index in row1:
+            self.checkBelow(i)
+            return i
+        return index
+
+    #this is an extremely naive implementation
+    def checkAbove(self, index):
+        direction = self.shoot_bubble.direction
+        if self.board_bubbles[index] != 0:
+            return self.checkBelow(index)
+        if index in edges:
+            return index
+        if direction == "right":
+                i = index - 4
+        elif direction == "left" or direction == "up":
+            i = index - 4
+        if index in row5:
+            self.checkAbove(i)
+            return i
+        elif index in row4:
+            self.checkAbove(i)
+            return i
+        elif index in row3:
+            self.checkAbove(i)
+            return i
+        elif index in row2:
+            self.checkAbove(i)
+            return i
+        elif index in row1:
+            self.checkAbove(i)
+            return i
+        return index
+
     def shootBubble(self, dest_pos):
         """ this will shoot a bubble from its current location to the position specified """
         hit_array = []
         bubble = self.shoot_bubble
 
+        self.determineDirection(dest_pos)
         dist, i = self.nearest(dest_pos)
+        #i = self.checkAbove(i)
         snapped_dest = self.board_positions[i]
         self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
 
@@ -193,7 +267,7 @@ class Board:
                     bubbleLeft += BUBBLE_RADIUS # offset every other row
                     bubbleTop -= int(BUBBLE_RADIUS/3.5) # reduce the height so they go between the bubbles
                     #TODO: math the above line, is it a third?? a quarter?? somewhere in between??
-        print(self.board_positions)
+        #print(self.board_positions)
         return bubbleList
 
     def addToBoard(self):

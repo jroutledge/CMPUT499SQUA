@@ -8,7 +8,7 @@ def collide(pos1, pos2):
     x = pos1[0] - pos2[0]
     y = pos1[1] - pos2[1]
     dist = math.hypot(x, y)
-    if dist <= 2.1*BUBBLE_RADIUS:
+    if dist <= 2.5*BUBBLE_RADIUS:
         # collision
         return True
     else:
@@ -24,7 +24,9 @@ def getFontPixels(font, size, word):
 
 def writeToBubble(word, pos, color, gameDisplay):
     """ this writes the text to the middle of a bubble """
-    fontSize = int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
+    fontSize = 30
+    #don't scale font size
+    #int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     #TODO: make this catch divide by zero errors
     font = 'Arial'
     pixelFontSize = getFontPixels(font, fontSize, word)
@@ -45,6 +47,7 @@ class Bubble:
         self.pos = (pos_x, pos_y)   # tuple that represents the bubbles position
         self.word = word            # word that will be in the buble
         self.colour = colour        # the colour that the bubble will be
+        self.direction = None
         return
 
     # TODO: this function should move a bubble around the screen
