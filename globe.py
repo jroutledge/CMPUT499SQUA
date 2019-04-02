@@ -15,27 +15,34 @@ def init(grade_level, mode):
     #print(path)
 
     d = {}
-    # check the mode
-    if mode.lower() == 'synonym' or mode.lower() == 'synonyms' or mode.lower() == 's':
-        table2 = 'SynWords'
-    elif mode.lower() == 'antonym' or mode.lower() == 'antonyms' or mode.lower() == 'a':
-        table2 = 'AntWords'
-    else:
-        print("Invalid mode argument. Exiting...")
-        sys.exit()
 
     # check the grade level
     if int(grade_level) < 1 or int(grade_level) > 8:
         print("Invalid grade level argumennt. Exiting...")
         sys.exit()
 
+    # check the mode
+    if mode.lower() == 'synonym' or mode.lower() == 'synonyms' or mode.lower() == 's':
+        table2 = 'SynWords'
+        attr = 's.syn'
+    elif mode.lower() == 'antonym' or mode.lower() == 'antonyms' or mode.lower() == 'a':
+        table2 = 'AntWords'
+        attr = 's.ant'
+
+    else:
+        print("Invalid mode argument. Exiting...")
+        sys.exit()
+
     # conn.row_factory = dict_factory
     c = conn.cursor()
-    c.execute('SELECT w.word, s.syn \
-               FROM StartWords w, {0} s \
-               WHERE w.grade_level = {1} \
-               AND w.word = s.word'.format(table2, grade_level))
+
+    c.execute('SELECT w.word, {0} \
+               FROM StartWords w, {1} s \
+               WHERE w.grade_level = {2} \
+               AND w.word = s.word'.format(attr, table2, grade_level))
+
     all_rows = c.fetchall()
+
     for i in all_rows:
         word = str(i[0].encode("utf-8"))
         similar = str(i[1].encode("utf-8"))
@@ -52,7 +59,10 @@ def init(grade_level, mode):
         key = d.keys()[i]
         val = d[key]
         WORDS[key] = val
-    #print(WORDS)
+
+    # print(WORDS)
+
+    conn.close()
 
 # Global values for the display size
 # (we will always multiply these so that we can scale the resolution)
