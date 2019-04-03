@@ -24,13 +24,13 @@ def getFontPixels(font, size, word):
 
 def writeToBubble(word, pos, color, gameDisplay):
     """ this writes the text to the middle of a bubble """
-    fontSize = 30
+    fontSize = 22
     #don't scale font size
     #int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     #TODO: make this catch divide by zero errors
     font = 'Arial'
     pixelFontSize = getFontPixels(font, fontSize, word)
-    horizontalMiddle = int(pixelFontSize[0]/3) # dividing by 2 wasn't working?? TODO: essplain
+    horizontalMiddle = int(pixelFontSize[0]/2) # dividing by 2 wasn't working?? TODO: essplain
     vertMiddle = int(pixelFontSize[1]/3)
     wordFont = pygame.font.SysFont(font, fontSize)
     wordBubble = wordFont.render(word, False, color)

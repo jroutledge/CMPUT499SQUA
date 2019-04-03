@@ -1,11 +1,12 @@
 import pygame
 import sys
 import time
+import argparse
 import bubble
 from board import Board
 from bubble import Bubble
 from globe import *
-import argparse
+from popup import Popup
 
 #TODO: look into game slowdown, and also connect frontend to back
 
@@ -47,6 +48,7 @@ def game_loop():
     gameDisplay.fill(BACKGROUND_COLOUR)
     clock = pygame.time.Clock()
     running = True
+    won = False
     
     board = Board(gameDisplay)
     board.createWordList()
@@ -55,8 +57,10 @@ def game_loop():
     board.addToBoard()
 
     while running:
-        if board.future_bubbles == []:
-            break
+        if board.future_bubbles == [] or len(board.board_bubbles) == 22: # TODO: check if this is actually right
+            print("You did not win. Try again!")
+            running = False
+
         # board.drawBoard()
         # board.drawAllBubbles()
         # board.addToBoard()
@@ -80,6 +84,7 @@ def game_loop():
                 # print a win message to the screen
                 board.won = True
                 print("You won! Good job! :)")
+                won = True
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
@@ -121,7 +126,26 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
-    quitGame()
+    if won:
+        # display a winning message
+        p = Popup("Good job! You won!", int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), gameDisplay, colour=PURPLE)
+    else:
+        # display a better luck next time message
+        p = Popup("Better luck next time! Try again!", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.58), gameDisplay, colour=PURPLE)
+
+    p.create()
+
+    exit_message = Popup("Press any key to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.63), gameDisplay, colour=PURPLE)
+    exit_message.create()
+
+    pygame.display.update()
+
+    paused = True
+    while paused:
+        for ev in pygame.event.get():
+            if ev.type == pygame.KEYDOWN:
+                paused = False
+                quitGame()
 
 def main():
     parser = argparse.ArgumentParser(description='Play the game')
