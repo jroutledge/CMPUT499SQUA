@@ -104,6 +104,7 @@ def game_loop():
 
             if event.type == pygame.QUIT:
                 running = False
+                quitGame()
             
         if board.shooting and board.shoot_pos != []:
             board.shoot_bubble.erase(gameDisplay)
@@ -131,11 +132,11 @@ def game_loop():
         p = Popup("Good job! You won!", int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), gameDisplay, colour=PURPLE)
     else:
         # display a better luck next time message
-        p = Popup("Better luck next time! Try again!", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.58), gameDisplay, colour=PURPLE)
+        p = Popup("Better luck next time! Try again!", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.58), gameDisplay)
 
     p.create()
 
-    exit_message = Popup("Press any key to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.63), gameDisplay, colour=PURPLE)
+    exit_message = Popup("Press any key to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.63), gameDisplay)
     exit_message.create()
 
     pygame.display.update()
@@ -144,6 +145,9 @@ def game_loop():
     while paused:
         for ev in pygame.event.get():
             if ev.type == pygame.KEYDOWN:
+                paused = False
+                quitGame()
+            elif ev.type == pygame.QUIT:
                 paused = False
                 quitGame()
 
