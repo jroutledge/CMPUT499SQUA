@@ -24,7 +24,7 @@ def getFontPixels(font, size, word):
 
 def writeToBubble(word, pos, color, gameDisplay):
     """ this writes the text to the middle of a bubble """
-    fontSize = 22
+    fontSize = 18
     #don't scale font size
     #int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     #TODO: make this catch divide by zero errors

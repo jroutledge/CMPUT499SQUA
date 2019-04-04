@@ -1,11 +1,12 @@
 from bubble import *
 from popup import Popup
+from globe import *
 
+import time
 import math
 import random
 import pygame
 from scipy.spatial import KDTree
-from globe import *
 
 
 def calcBoard(board):
@@ -26,6 +27,7 @@ row5 = range(18, 22)
 middle = [11, 20]
 right = []
 edges = [0, 4, 5, 8, 9, 13, 14, 17, 18, 22]
+
 
 class Board:
     def __init__(self,  gameDisplay):
@@ -51,6 +53,20 @@ class Board:
         self.current_popups = []
         self.help_box = None    # rect object on the board
         self.gameDisplay = gameDisplay
+        self.num_bubbles_poopped = 0
+
+    def drawScore(self):
+        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
+        big_meme_font = pygame.font.SysFont('Comic Sans MS', 40)
+
+        # erase previous number
+        pygame.draw.rect(self.gameDisplay, WHITE, (20, 70, 80, 120), 0)
+
+        # draw score
+        score_meme_1 = meme_font.render("Score:", False, BLACK)
+        score_meme_2 = big_meme_font.render(str(self.num_bubbles_poopped), False, BLACK)
+        self.gameDisplay.blit(score_meme_1, (15, 50))
+        self.gameDisplay.blit(score_meme_2, (20, 70))
 
     def nearest(self, pos):
         #calculate the shots closest neighbor
@@ -62,7 +78,10 @@ class Board:
         #print(len(self.board_bubbles), len(self.board_positions), len(board_cpy))
         kdtree = KDTree(board_cpy)
         dist, indices = kdtree.query(pos)
-        indice = self.board_positions.index(board_cpy[indices])
+        try:
+            indice = self.board_positions.index(board_cpy[indices])
+        except ValueError:
+            return "ValueError", None
 
         return dist, indice
 
@@ -139,12 +158,17 @@ class Board:
 
         self.determineDirection(dest_pos)
         dist, i = self.nearest(dest_pos)
+        if dist == "ValueError":
+            return "ValueError"
         #i = self.checkAbove(i)
         snapped_dest = self.board_positions[i]
         self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
 
         # remove from future bubbles
-        self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
+        try:
+            self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
+        except ValueError:
+            return "ValueError"
 
         # add shot bubble to board
         self.board_bubbles[i] = bubble
@@ -182,22 +206,39 @@ class Board:
         '''
         'pops' the matches and then displays a good job message
         '''
+
         bubble = self.shoot_bubble
         bubble.erase(self.gameDisplay)
         bubble.draw(self.gameDisplay)
         matches = self.current_matches
         if matches != [bubble]:
             # erase the matches
+
+            # display good job message
+            good_job = Popup("You popped bubbles! Good job!.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.30),
+                             self.gameDisplay)
+            good_job.create()
+            pygame.display.update()
+
             for b in matches:
                 b.erase(self.gameDisplay)
                 index = self.board_bubbles.index(b)
                 self.board_bubbles[index] = 0
                 #b.colour = WHITE
+                self.num_bubbles_poopped += 1
             bubble.erase(self.gameDisplay)
 
             # send good job message
             print("You popped bubbles!")
             self.success_popped = True
+
+            time.sleep(0.3)
+            good_job.erase()
+
+        self.drawScore()
+        self.shooting = False
+
+
         return
 
     def drawBoard(self):
@@ -207,11 +248,14 @@ class Board:
         self.board = pygame.draw.rect(self.gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
 
+        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
         # draw help box
         self.help_box = pygame.draw.rect(self.gameDisplay, BLACK, (0, 0, 100, 40), 2)
-        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
         help_meme = meme_font.render('HELP', False, BLACK)
         self.gameDisplay.blit(help_meme, (20, 5))
+
+        # draw score
+        self.drawScore()
 
     def drawAllBubbles(self):
         self.drawShootBubble()
@@ -307,6 +351,7 @@ class Board:
             POPUP_COUNTER += 1
             # store the popup for deletion later
             #POPUP = ['Words Matched! Good Job!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5)]
+            self.success_popped = False
         elif self.game_over:
             # create the game over popup
             lost_popup = Popup('Game over man, game over!', int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.4), self.gameDisplay, RED)

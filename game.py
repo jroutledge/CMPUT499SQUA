@@ -57,8 +57,30 @@ def game_loop():
     board.addToBoard()
 
     while running:
-        if board.future_bubbles == [] or len(board.board_bubbles) == 22: # TODO: check if this is actually right
-            print("You did not win. Try again!")
+        # if (board.future_bubbles == [] or len(board.board_bubbles) == 22) and not board.shooting: # TODO: check if this is actually right
+        #     print("You did not win. Try again!")
+        #     running = False
+
+        if board.shooting and board.shoot_pos != []:
+            board.shoot_bubble.erase(gameDisplay)
+            #pygame.display.update()
+            board.shoot_bubble.pos = board.shoot_pos[0]
+            board.shoot_bubble.drawAsGrey(gameDisplay)
+            board.shoot_pos.pop(0)
+        elif board.shooting and board.shoot_pos == [] and board.future_bubbles != []:
+            # load in new bubble
+            board.popMatches()
+            board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+                                       board.future_bubbles[0][0], board.future_bubbles[0][1])
+            board.shooting = False
+            board.drawAllBubbles()
+        elif board.board_bubbles == []:
+            board.won = True
+            print("You won! Good job! :)")
+            won = True
+            running = False
+        elif board.future_bubbles == [] and not board.shooting: # TODO: check if this is actually right
+            print("Game over, better luck next time :(")
             running = False
 
         # board.drawBoard()
@@ -74,17 +96,22 @@ def game_loop():
                 i = 0 #TODO: find a way for it to find the popup -> board.current_popups.index(popped_bubble)
                 #board.current_popups.pop(i).erase()
                 board.success_popped = False
+            # if not board.success_popped:
+            #     for p in board.current_popups:
+            #         p.erase()
 
             if board.future_bubbles == []:
                 board.game_over = True
-                board.future_bubbles = [(" ", WHITE)] #TODO: fix this kludge
+                board.future_bubbles = [(" ", WHITE)]  # TODO: fix this kludge
                 print("Game over, better luck next time :(")
+                running = False
 
             if board.board_bubbles == []:
                 # print a win message to the screen
                 board.won = True
                 print("You won! Good job! :)")
                 won = True
+                running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = getPos()
@@ -92,7 +119,10 @@ def game_loop():
                 if board.board.collidepoint(pos):
                     board.shooting = True
                     # valid selection for bubble, shoot it
-                    board.shootBubble(pos)
+                    e = board.shootBubble(pos)
+                    if e == "ValueError":
+                        running = False
+                        print("Game over, better luck next time :(")
 
                 elif board.help_box.collidepoint(pos):
                     # make help box appear
@@ -105,38 +135,25 @@ def game_loop():
             if event.type == pygame.QUIT:
                 running = False
                 quitGame()
-            
-        if board.shooting and board.shoot_pos != []:
-            board.shoot_bubble.erase(gameDisplay)
-            #pygame.display.update()
-            board.shoot_bubble.pos = board.shoot_pos[0]
-            board.shoot_bubble.drawAsGrey(gameDisplay)
-            board.shoot_pos.pop(0)
-        elif board.shooting and board.shoot_pos == [] and board.future_bubbles != []:
-            # load in new bubble
-            board.popMatches()
-            board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
-                                       board.future_bubbles[0][0], board.future_bubbles[0][1])
-            board.shooting = False
-            board.drawAllBubbles()
-        elif board.future_bubbles == []:
-            board.won = True
-            print("You won! Good job! :)")
 
-
+        # board.addToBoard()
         pygame.display.update()
         clock.tick(60)
 
+    # make it pretty for the end of the game
+    board.drawBoard()
+    board.drawAllBubbles()
+
     if won:
         # display a winning message
-        p = Popup("Good job! You won!", int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.5), gameDisplay, colour=PURPLE)
+        p = Popup("Good job! You won!", int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.30), gameDisplay)
     else:
         # display a better luck next time message
-        p = Popup("Better luck next time! Try again!", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.58), gameDisplay)
+        p = Popup("Better luck next time! Try again!", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.30), gameDisplay)
 
     p.create()
 
-    exit_message = Popup("Press any key to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.63), gameDisplay)
+    exit_message = Popup("Press any key to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.34), gameDisplay)
     exit_message.create()
 
     pygame.display.update()
