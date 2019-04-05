@@ -23,7 +23,7 @@
 6. Return to main project folder
     > cd ..
 7. To run the game, run:
-    > python game.py --grade_level <number between 1 and 8> --mode <Synonym or Antonym>
+    > python game.py [number between 1 and 8] [Synonym or Antonym]
     
     or the following for help 
     
