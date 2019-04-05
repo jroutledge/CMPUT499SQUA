@@ -35,4 +35,4 @@
 
 * There is a bug in pygame if you run pygame on a mac in python 3.7.2, use 2.7 on mac ([resource](https://www.python.org/downloads/mac-osx/)) (note: this is supposedly fixed if you're not using a homebrew installation of python 3.7.2)
 
-* The animation of the bubbles is only working on some machines right now, we will be investigating this and patching it as soon as possible
+* The window is of a fixed size, regardless of screen resolution, this leads some things, like fonts, to look strange.
