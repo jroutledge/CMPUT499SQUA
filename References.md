@@ -20,6 +20,7 @@
 * https://stackoverflow.com/questions/123198/how-do-i-copy-a-file-in-python
 * https://stackoverflow.com/questions/19775636/pygame-pause-key
 * https://stackoverflow.com/questions/42014195/rendering-text-with-multiple-lines-in-pygame
+* https://askubuntu.com/questions/651441/how-to-install-arial-font-in-ubuntu?fbclid=IwAR2J2OBbIXHGw5n3yfiZ8zANeXlKudCdQf-9ho8qLgm-O0V3gZ_8nQUC004
 
 ## Research Resources ##
 
