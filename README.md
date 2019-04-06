@@ -28,6 +28,10 @@
     or the following for help 
     
     > python game.py --help
+7.1. If the game is not working becuase of a Pillow font error, try running the following commands:
+    > sudo apt-get install ttf-mscorefonts-installer \ 
+    sudo fc-cache \ 
+    fc-match Arial
 
 ---
 
