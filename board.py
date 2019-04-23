@@ -19,6 +19,19 @@ def calcBoard(board):
     board_len = (num_bubbles * 5) - 2 # middle and last row have 1 less
     return bubbles_len, board_len
 
+#this is copied from bubbles, so it should be generalized
+def find_collide(pos1, pos2):
+    """ checks if 2 points are within 2.5*radius of eachother """
+    x = pos1[0] - pos2[0]
+    y = pos1[1] - pos2[1]
+    dist = math.hypot(x, y)
+    if dist <= 2 * BUBBLE_RADIUS:
+        # collision
+        return True
+    else:
+        # no collision
+        return False
+
 row1 = range(0,4)
 row2 = range(5,8)
 row3 = range(9,13)
@@ -151,10 +164,33 @@ class Board:
             return i
         return index
 
+
+    #WARNING: very hacky function incoming
+    def fix_pos(self, i, dest, og_pos):
+        self.shoot_pos = self.shoot_bubble.move(dest, self.gameDisplay)
+        path = self.shoot_pos
+        new_path = path
+        found = False
+        for i in range(0, len(path)):
+            for y in range(0, len(self.board_bubbles)):
+                bubble = self.board_bubbles[y]
+                spot = path[i]
+                #print(spot)
+                if bubble != 0 and find_collide(bubble.pos, spot):
+                    found = True
+                    new_spot = self.nearest(path[i-1])[1]
+                    self.shoot_bubble.pos = og_pos
+                    self.shoot_pos = self.shoot_bubble.move(self.board_positions[new_spot], self.gameDisplay)
+                    return new_spot
+        return i
+        
+        
     def shootBubble(self, dest_pos):
         """ this will shoot a bubble from its current location to the position specified """
         hit_array = []
-        bubble = self.shoot_bubble
+
+        if find_collide(SHOOT_POSITION, dest_pos):
+            self.game_over = True
 
         self.determineDirection(dest_pos)
         dist, i = self.nearest(dest_pos)
@@ -162,7 +198,9 @@ class Board:
             return "ValueError"
         #i = self.checkAbove(i)
         snapped_dest = self.board_positions[i]
-        self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
+        #self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
+        i = self.fix_pos(i, snapped_dest, SHOOT_POSITION) #this is going to be ridiculously hacky because the board should calculate a bubble's path, not the bubble itself
+        bubble = self.shoot_bubble
 
         # remove from future bubbles
         try:
@@ -171,8 +209,11 @@ class Board:
             return "ValueError"
 
         # add shot bubble to board
-        self.board_bubbles[i] = bubble
-        self.shoot_bubble.pos = self.board_positions[i]
+        try:
+            self.board_bubbles[i] = self.shoot_bubble
+        except IndexError:
+            return "IndexError"
+        #self.shoot_bubble.pos = self.board_positions[i]
 
         # detect matches and pop as needed
         self.findMatches()
@@ -237,7 +278,6 @@ class Board:
 
         self.drawScore()
         self.shooting = False
-
 
         return
 

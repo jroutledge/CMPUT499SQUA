@@ -28,8 +28,8 @@ def writeToBubble(word, pos, color, gameDisplay):
     #don't scale font size
     #int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     #TODO: make this catch divide by zero errors
-    font = 'Arial'
-    pixelFontSize = getFontPixels(font, fontSize, word)
+    font = 'Andale Mono'
+    pixelFontSize = getFontPixels(font, fontSize, word) #TODO: hardcode this
     horizontalMiddle = int(pixelFontSize[0]/2) # dividing by 2 wasn't working?? TODO: essplain
     vertMiddle = int(pixelFontSize[1]/3)
     wordFont = pygame.font.SysFont(font, fontSize)
@@ -67,14 +67,6 @@ class Bubble:
             xPos = x1+(difX*(i+1)/num_positions)
             yPos = y1+(difY*(i+1)/num_positions)
             intermediate_positions[i] = (xPos, yPos)
-        # for i in intermediate_positions:
-        #     self.erase()
-        #     print(self.pos, i)
-        #     pygame.time.wait(10)
-        #     self.pos = i
-        #     self.draw()
-        #     pygame.time.wait(10)
-
         self.erase(gameDisplay)
         self.pos = target_position
         return intermediate_positions
