@@ -25,7 +25,7 @@ def find_collide(pos1, pos2):
     x = pos1[0] - pos2[0]
     y = pos1[1] - pos2[1]
     dist = math.hypot(x, y)
-    if dist <= 2 * BUBBLE_RADIUS:
+    if dist <= 1.8 * BUBBLE_RADIUS: # this not being 2 * radius makes it easiier to "sneak" bubbles past
         # collision
         return True
     else:
@@ -90,13 +90,16 @@ class Board:
                 board_cpy[i] = [-1, -1]
         #print(len(self.board_bubbles), len(self.board_positions), len(board_cpy))
         kdtree = KDTree(board_cpy)
-        dist, indices = kdtree.query(pos)
-        try:
-            indice = self.board_positions.index(board_cpy[indices])
-        except ValueError:
-            return "ValueError", None
+        dist, indice = kdtree.query(pos)
 
         return dist, indice
+        # this causes a bug
+        # try:
+        #     indice = self.board_positions.index(board_cpy[indices])
+        # except ValueError:
+        #     return "ValueError", None
+
+        # return dist, indice
 
     def determineDirection(self, dest_pos):
         pos1 = self.shoot_bubble.pos
@@ -166,7 +169,7 @@ class Board:
 
 
     #WARNING: very hacky function incoming
-    def fix_pos(self, i, dest, og_pos):
+    def fix_pos(self, x, dest, og_pos):
         self.shoot_pos = self.shoot_bubble.move(dest, self.gameDisplay)
         path = self.shoot_pos
         new_path = path
@@ -178,24 +181,25 @@ class Board:
                 #print(spot)
                 if bubble != 0 and find_collide(bubble.pos, spot):
                     found = True
-                    new_spot = self.nearest(path[i-1])[1]
+                    new_spot = self.nearest(path[i])[1]
                     self.shoot_bubble.pos = og_pos
                     self.shoot_pos = self.shoot_bubble.move(self.board_positions[new_spot], self.gameDisplay)
                     return new_spot
-        return i
+        return x
         
         
     def shootBubble(self, dest_pos):
         """ this will shoot a bubble from its current location to the position specified """
         hit_array = []
 
-        if find_collide(SHOOT_POSITION, dest_pos):
-            self.game_over = True
+        #if find_collide(SHOOT_POSITION, dest_pos):
+        #    self.game_over = True
 
         self.determineDirection(dest_pos)
         dist, i = self.nearest(dest_pos)
-        if dist == "ValueError":
-            return "ValueError"
+        # if dist == "ValueError":
+        #     print("1")
+            #return "ValueError"
         #i = self.checkAbove(i)
         snapped_dest = self.board_positions[i]
         #self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
@@ -206,12 +210,14 @@ class Board:
         try:
             self.future_bubbles.pop(self.future_bubbles.index((bubble.word, bubble.colour)))
         except ValueError:
+            print("2")
             return "ValueError"
 
         # add shot bubble to board
         try:
             self.board_bubbles[i] = self.shoot_bubble
         except IndexError:
+            print("3")
             return "IndexError"
         #self.shoot_bubble.pos = self.board_positions[i]
 

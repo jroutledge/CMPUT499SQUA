@@ -28,7 +28,7 @@ def writeToBubble(word, pos, color, gameDisplay):
     #don't scale font size
     #int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     #TODO: make this catch divide by zero errors
-    font = 'Andale Mono'
+    font = 'Arial'
     pixelFontSize = getFontPixels(font, fontSize, word) #TODO: hardcode this
     horizontalMiddle = int(pixelFontSize[0]/2) # dividing by 2 wasn't working?? TODO: essplain
     vertMiddle = int(pixelFontSize[1]/3)
