@@ -309,6 +309,11 @@ class Board:
 
     def createWordList(self):
         """ this will populate the game board with words """
+        # we're going to make two different words to shoot with the same color
+        # so we'll pop the first word of a color we see so that we can add it
+        # to the main word list under the same color
+        found_color = [[False, False]] * NUM_WORDS
+
         # make a list of all the words with their associated colour
         word_colour_list = []
         for i in range(0, len(WORDS)):
@@ -316,7 +321,15 @@ class Board:
             colour = WORD_COLOURS[i]
             self.future_bubbles.append((main_word, colour))
             for word in WORDS[main_word]:
-                word_colour_list.append((word, colour))
+                if not found_color[i][0]:
+                    found_color[i][0] = True
+                    self.future_bubbles.append((word, colour))
+                elif not found_color[i][1]:
+                    found_color[i][1] = True
+                    self.future_bubbles.append((word, colour))
+                else:
+                    word_colour_list.append((word, colour))
+
         # shuffle the list
         random.shuffle(word_colour_list)
         # loop through the list and create the bubbles
@@ -324,6 +337,7 @@ class Board:
         self.board_bubbles = bubbleList
         # for i in range(0, self.board_len - self.bubbles_len):
         #     self.board_bubbles.append(0)
+        random.shuffle(self.future_bubbles)
 
     def createBubbles(self, word_colour_list):
         row_num = 0

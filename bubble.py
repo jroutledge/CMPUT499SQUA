@@ -17,7 +17,7 @@ def collide(pos1, pos2):
 
 def getFontPixels(font, size, word):
     """ helper to find out how big a word will be, in pixels, given its font and size """
-    font = ImageFont.truetype(font, size)
+    font = ImageFont.truetype(font, size) # , encoding="utf-8")
     size = font.getsize(word)
     return size
 
@@ -28,7 +28,7 @@ def writeToBubble(word, pos, color, gameDisplay):
     #don't scale font size
     #int(2*(BUBBLE_RADIUS)/(len(word)*0.5)) # scale the font size bases on bubble radius and word length
     #TODO: make this catch divide by zero errors
-    font = 'Andale Mono'
+    font = 'Arial'
     pixelFontSize = getFontPixels(font, fontSize, word) #TODO: hardcode this
     horizontalMiddle = int(pixelFontSize[0]/2) # dividing by 2 wasn't working?? TODO: essplain
     vertMiddle = int(pixelFontSize[1]/3)
