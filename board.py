@@ -21,11 +21,11 @@ def calcBoard(board):
 
 #this is copied from bubbles, so it should be generalized
 def find_collide(pos1, pos2):
-    """ checks if 2 points are within 2.5*radius of eachother """
+    """ checks if 2 points are within x*radius of eachother """
     x = pos1[0] - pos2[0]
     y = pos1[1] - pos2[1]
     dist = math.hypot(x, y)
-    if dist <= 1.8 * BUBBLE_RADIUS: # this not being 2 * radius makes it easiier to "sneak" bubbles past
+    if dist <= 1.7 * BUBBLE_RADIUS: # this not being 2 * radius makes it easiier to "sneak" bubbles past
         # collision
         return True
     else:
@@ -81,12 +81,14 @@ class Board:
         self.gameDisplay.blit(score_meme_1, (2, 80))
         self.gameDisplay.blit(score_meme_2, (30, 120))
 
-    def nearest(self, pos):
+    def nearest(self, pos, flag = True):
         #calculate the shots closest neighbor
         board_cpy = [x for x in self.board_positions] # [x for x in self.board_positions if x is not 0]
         for i in range(0, len(board_cpy)):
-            if self.board_bubbles[i] != 0: #TODO: maybe calling the popped bubbles 0 is sloppy
+            if self.board_bubbles[i] != 0 and flag: #TODO: maybe calling the popped bubbles 0 is sloppy
                 #remake that position super far away so we never match it
+                board_cpy[i] = [-1, -1]
+            if self.board_bubbles[i] == 0 and not flag: #to find nearest full bubble
                 board_cpy[i] = [-1, -1]
         #print(len(self.board_bubbles), len(self.board_positions), len(board_cpy))
         kdtree = KDTree(board_cpy)
@@ -169,23 +171,48 @@ class Board:
 
 
     #WARNING: very hacky function incoming
-    def fix_pos(self, x, dest, og_pos):
+    def fix_pos(self, a, dest, og_pos):
+        #first extend destination to the edge
+        # TODO: this doesn't work
+        # left_edge = self.left
+        # right_edge = left_edge + self.width
+        # top_edge = self.top + self.height
+        # x = dest[0]
+        # y = dest[1]
+        # x2 = og_pos[0]
+        # y2 = og_pos[1]
+        # difX = x - x2
+        # difY = y - y2
+        # dist = math.sqrt(difX**2 + difY**2)
+        # num_positions = int(dist / 10)
+        # c = 0
+        # while left_edge < x+(difX*(c+1)/num_positions) < right_edge and \
+        #         y+(difY*(c+1)/num_positions) < top_edge:
+        #     c+=1
+        #     x = x+(difX*(c+1)/num_positions)
+        #     y = y+(difY*(c+1)/num_positions)
+        #     #self.shoot_pos.append((x, y))
+        # dist, m = self.nearest((x, y))# self.shoot_pos[-1]
+        # dest = self.board_positions[m]
+        # print(dest)
         self.shoot_pos = self.shoot_bubble.move(dest, self.gameDisplay)
         path = self.shoot_pos
-        new_path = path
         found = False
         for i in range(0, len(path)):
-            for y in range(0, len(self.board_bubbles)):
-                bubble = self.board_bubbles[y]
-                spot = path[i]
-                #print(spot)
-                if bubble != 0 and find_collide(bubble.pos, spot):
-                    found = True
-                    new_spot = self.nearest(path[i])[1]
-                    self.shoot_bubble.pos = og_pos
-                    self.shoot_pos = self.shoot_bubble.move(self.board_positions[new_spot], self.gameDisplay)
-                    return new_spot
-        return x
+            dist, ind = self.nearest(path[i], False)
+            near_bubble = self.board_bubbles[ind]
+            if near_bubble != 0 and find_collide(near_bubble.pos, path[i]):
+                found = True
+                new_spot = self.nearest(path[i])[1]
+                #check if newspot is in first row and full
+                if new_spot > 17 and self.board_bubbles[new_spot] != 0:
+                    return "Game Over"
+                self.shoot_bubble.pos = og_pos
+                self.shoot_pos = self.shoot_bubble.move(self.board_positions[new_spot], self.gameDisplay)
+                if new_spot == i:
+                    return "Game Over"
+                return new_spot
+        return a
         
         
     def shootBubble(self, dest_pos):
@@ -204,6 +231,8 @@ class Board:
         snapped_dest = self.board_positions[i]
         #self.shoot_pos = self.shoot_bubble.move(snapped_dest, self.gameDisplay)
         i = self.fix_pos(i, snapped_dest, SHOOT_POSITION) #this is going to be ridiculously hacky because the board should calculate a bubble's path, not the bubble itself
+        if i == "Game Over":
+            return i
         bubble = self.shoot_bubble
 
         # remove from future bubbles
@@ -314,7 +343,7 @@ class Board:
 
     def drawBoard(self):
         # draw white board
-        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
+        pygame.draw.rect(self.gameDisplay, WHITE, (self.left, self.top, self.width, self.height), 0)
         # draw board outline
         self.board = pygame.draw.rect(self.gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
