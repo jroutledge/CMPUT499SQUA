@@ -17,7 +17,7 @@ def collide(pos1, pos2):
 
 def getFontPixels(font, size, word):
     """ helper to find out how big a word will be, in pixels, given its font and size """
-    font = ImageFont.truetype(font, size)
+    font = ImageFont.truetype(font, size) # , encoding="utf-8")
     size = font.getsize(word)
     return size
 
