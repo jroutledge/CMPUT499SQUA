@@ -304,8 +304,6 @@ class Board:
 
         for j in reversed(index_to_pop):
             self.future_bubbles.pop(j)
-            print("popped a thing")
-
 
     def drawHelp(self):
         meme_font = pygame.font.SysFont('Comic Sans MS', 50)
