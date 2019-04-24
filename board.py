@@ -394,6 +394,7 @@ class Board:
         self.board_bubbles = bubbleList
         # for i in range(0, self.board_len - self.bubbles_len):
         #     self.board_bubbles.append(0)
+        self.future_bubbles += self.future_bubbles
         random.shuffle(self.future_bubbles)
 
     def createBubbles(self, word_colour_list):

@@ -61,6 +61,7 @@ def game_loop():
         #     print("You did not win. Try again!")
         #     running = False
 
+
         if board.shooting and board.shoot_pos != []:
             board.shoot_bubble.erase(gameDisplay)
             #pygame.display.update()
@@ -69,12 +70,16 @@ def game_loop():
             board.shoot_pos.pop(0)
         elif board.shooting and board.shoot_pos == [] and board.future_bubbles != []:
             # load in new bubble
-            board.popMatches()
-            board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
-                                       board.future_bubbles[0][0], board.future_bubbles[0][1])
-            board.shooting = False
-            board.drawAllBubbles()
-        elif board.board_bubbles == []:
+            try:
+                board.popMatches()
+                board.shoot_bubble = Bubble(SHOOT_POSITION[0], SHOOT_POSITION[1], \
+                                           board.future_bubbles[0][0], board.future_bubbles[0][1])
+                board.shooting = False
+                board.drawAllBubbles()
+            except IndexError:
+                running = False
+
+        if board.board_bubbles.count(0) == len(board.board_bubbles):
             board.won = True
             print("You won! Good job! :)")
             won = True
@@ -88,6 +93,7 @@ def game_loop():
         # board.addToBoard()
         board.drawShootBubble()
         for event in pygame.event.get():
+
             # this section handles the erasing of a popup after 5000 ticks
             if POPUP_COUNTER >= 0:
                 POPUP_COUNTER += 1
@@ -142,12 +148,12 @@ def game_loop():
 
     # make it pretty for the end of the game
     board.drawBoard()
-    board.drawAllBubbles()
 
     if won:
         # display a winning message
         p = Popup("Good job! You won!", int(DISPLAY_X * 0.35), int(DISPLAY_Y * 0.30), gameDisplay)
     else:
+        board.drawAllBubbles()
         # display a better luck next time message
         p = Popup("Better luck next time! Try again!", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.30), gameDisplay)
 
