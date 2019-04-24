@@ -173,27 +173,28 @@ class Board:
     #WARNING: very hacky function incoming
     def fix_pos(self, a, dest, og_pos):
         #first extend destination to the edge
-        left_edge = self.left
-        right_edge = left_edge + self.width
-        top_edge = self.top + self.height
-        x = dest[0]
-        y = dest[1]
-        x2 = og_pos[0]
-        y2 = og_pos[1]
-        difX = x - x2
-        difY = y - y2
-        dist = math.sqrt(difX**2 + difY**2)
-        num_positions = int(dist / 10)
-        c = 0
-        while left_edge < x+(difX*(c+1)/num_positions) < right_edge and \
-                y+(difY*(c+1)/num_positions) < top_edge:
-            c+=1
-            x = x+(difX*(c+1)/num_positions)
-            y = y+(difY*(c+1)/num_positions)
-            #self.shoot_pos.append((x, y))
-        dist, m = self.nearest((x, y))# self.shoot_pos[-1]
-        dest = self.board_positions[m]
-        print(dest)
+        # TODO: this doesn't work
+        # left_edge = self.left
+        # right_edge = left_edge + self.width
+        # top_edge = self.top + self.height
+        # x = dest[0]
+        # y = dest[1]
+        # x2 = og_pos[0]
+        # y2 = og_pos[1]
+        # difX = x - x2
+        # difY = y - y2
+        # dist = math.sqrt(difX**2 + difY**2)
+        # num_positions = int(dist / 10)
+        # c = 0
+        # while left_edge < x+(difX*(c+1)/num_positions) < right_edge and \
+        #         y+(difY*(c+1)/num_positions) < top_edge:
+        #     c+=1
+        #     x = x+(difX*(c+1)/num_positions)
+        #     y = y+(difY*(c+1)/num_positions)
+        #     #self.shoot_pos.append((x, y))
+        # dist, m = self.nearest((x, y))# self.shoot_pos[-1]
+        # dest = self.board_positions[m]
+        # print(dest)
         self.shoot_pos = self.shoot_bubble.move(dest, self.gameDisplay)
         path = self.shoot_pos
         found = False
@@ -208,6 +209,8 @@ class Board:
                     return "Game Over"
                 self.shoot_bubble.pos = og_pos
                 self.shoot_pos = self.shoot_bubble.move(self.board_positions[new_spot], self.gameDisplay)
+                if new_spot == i:
+                    return "Game Over"
                 return new_spot
         return a
         
