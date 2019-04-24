@@ -120,7 +120,7 @@ def game_loop():
                     board.shooting = True
                     # valid selection for bubble, shoot it
                     e = board.shootBubble(pos)
-                    if e == "ValueError" or e == "IndexError":
+                    if e == "ValueError" or e == "IndexError" or e == "Game Over":
                         running = False
                         print("Game over, better luck next time :(")
 
