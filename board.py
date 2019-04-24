@@ -69,17 +69,17 @@ class Board:
         self.num_bubbles_poopped = 0
 
     def drawScore(self):
-        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
-        big_meme_font = pygame.font.SysFont('Comic Sans MS', 40)
+        meme_font = pygame.font.SysFont('Comic Sans MS', 35)
+        big_meme_font = pygame.font.SysFont('Comic Sans MS', 60)
 
         # erase previous number
-        pygame.draw.rect(self.gameDisplay, WHITE, (20, 70, 80, 120), 0)
+        pygame.draw.rect(self.gameDisplay, WHITE, (20, 120, 80, 120), 0)
 
         # draw score
-        score_meme_1 = meme_font.render("Score:", False, BLACK)
-        score_meme_2 = big_meme_font.render(str(self.num_bubbles_poopped), False, BLACK)
-        self.gameDisplay.blit(score_meme_1, (15, 50))
-        self.gameDisplay.blit(score_meme_2, (20, 70))
+        score_meme_1 = meme_font.render("SCORE", False, BLUE)
+        score_meme_2 = big_meme_font.render(str(self.num_bubbles_poopped), False, BLUE)
+        self.gameDisplay.blit(score_meme_1, (2, 80))
+        self.gameDisplay.blit(score_meme_2, (30, 120))
 
     def nearest(self, pos):
         #calculate the shots closest neighbor
@@ -285,7 +285,34 @@ class Board:
         self.drawScore()
         self.shooting = False
 
+        self.checkToRemoveColours()
+
         return
+
+    def checkToRemoveColours(self):
+        """ removes colors from shooting if they are no longer on the board """
+        found_colours = []
+        for b in self.board_bubbles:
+            if b != 0:
+                found_colours.append(b.colour)
+
+        # print(found_colours)
+        index_to_pop = []
+        for i in range(0, len(self.future_bubbles)):
+            if self.future_bubbles[i][1] not in found_colours:
+                index_to_pop.append(i)
+
+        for j in reversed(index_to_pop):
+            self.future_bubbles.pop(j)
+            print("popped a thing")
+
+
+    def drawHelp(self):
+        meme_font = pygame.font.SysFont('Comic Sans MS', 50)
+        # draw help box
+        self.help_box = pygame.draw.rect(self.gameDisplay, BLUE, (0, 0, 160, 80), 2)
+        help_meme = meme_font.render('HELP', False, BLUE)
+        self.gameDisplay.blit(help_meme, (20, 5))
 
     def drawBoard(self):
         # draw white board
@@ -294,11 +321,8 @@ class Board:
         self.board = pygame.draw.rect(self.gameDisplay, BLACK, \
                                       (self.left, self.top, self.width, self.height), 2)
 
-        meme_font = pygame.font.SysFont('Comic Sans MS', 25)
-        # draw help box
-        self.help_box = pygame.draw.rect(self.gameDisplay, BLACK, (0, 0, 100, 40), 2)
-        help_meme = meme_font.render('HELP', False, BLACK)
-        self.gameDisplay.blit(help_meme, (20, 5))
+        # draw help
+        self.drawHelp()
 
         # draw score
         self.drawScore()
@@ -425,8 +449,8 @@ class Board:
     def displayHelpBox(self):
         """ displays the help box for the user """
         meme_font = pygame.font.SysFont('Comic Sans MS', 30)
-        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 0)
-        pygame.draw.rect(self.gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_WIDTH), 2)
+        pygame.draw.rect(self.gameDisplay, WHITE, (HELP_X, HELP_Y, HELP_WIDTH, HELP_HEIGHT), 0)
+        pygame.draw.rect(self.gameDisplay, BLACK, (HELP_X, HELP_Y, HELP_WIDTH, HELP_HEIGHT), 2)
         for i, l in enumerate(HELP_MSG):
             self.gameDisplay.blit(meme_font.render(l, 0, BLACK), (HELP_X + 5, HELP_Y + 32 * i))
             # meme_font.render(l, False, BLACK)
@@ -436,7 +460,7 @@ class Board:
         paused = True
         while paused:
             for ev in pygame.event.get():
-                if ev.type == pygame.KEYDOWN:
+                if ev.type == pygame.KEYDOWN or ev.type == pygame.MOUSEBUTTONDOWN:
                     paused = False
                     self.drawBoard()
                     self.drawAllBubbles()

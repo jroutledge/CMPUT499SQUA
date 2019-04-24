@@ -108,16 +108,20 @@ HELP_MSG = ["Game Instructions and Help: ", "",
             "their meanings. If playing on synonym mode, this ",
             "means matching words like 'big' and 'huge' together.",
             "If playing on antonym mode, this means matching ",
-            "words like 'big' and 'small' together. Shoot the ",
-            "bubble at the word you think it matches. You can do ",
-            "this by clicking where you want the bubble to go on ",
-            "the board. If it's a match it will pop, otherwise it ",
-            "will stay. If you pop all the bubbles you win! ",
+            "words like 'big' and 'small' together. ", "",
+            "Shoot the bubble at the word you think it matches.",
+            "You can do this by clicking where you want the bubble ",
+            "to go on the board. If it's a match it will pop, ",
+            "otherwise it will stay. If you pop all the bubbles you",
+            "win! ", "",
             "Note, the bubble you're shooting will show up as grey.",
             "It is your job to figure out which words match the ",
             "bubble you're shooting. All the other words are are ",
-            "grouped by color.",
-            "", "To exit this menu, press any key."]
+            "grouped by color.", "",
+            "You can also see the number of bubbles you have ",
+            "popped in the upper left hand corner under score!",
+            "", "To exit this menu, press any key or click."]
+
 HELP_X = int(DISPLAY_X * 0.12)
 HELP_Y = int(DISPLAY_Y * 0.1)
 HELP_WIDTH = int(DISPLAY_X * 0.76)

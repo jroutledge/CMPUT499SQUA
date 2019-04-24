@@ -153,7 +153,7 @@ def game_loop():
 
     p.create()
 
-    exit_message = Popup("Press any key to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.34), gameDisplay)
+    exit_message = Popup("Press any key or click to exit game.", int(DISPLAY_X * 0.25), int(DISPLAY_Y * 0.34), gameDisplay)
     exit_message.create()
 
     pygame.display.update()
@@ -161,7 +161,7 @@ def game_loop():
     paused = True
     while paused:
         for ev in pygame.event.get():
-            if ev.type == pygame.KEYDOWN:
+            if ev.type == pygame.KEYDOWN or ev.type == pygame.MOUSEBUTTONDOWN:
                 paused = False
                 quitGame()
             elif ev.type == pygame.QUIT:
